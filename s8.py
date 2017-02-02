@@ -1,15 +1,16 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jan 25 23:43:46 2017
-
-@author: root
-"""
-
 from random import sample
-import time
-import sys
-from psychopy import core, event, gui, visual, data
+import glob, os, sys, time
+from psychopy import core, event, gui, visual, data, info
 #####################background######################################
+
+
+info = {'cond':['2000ms','1000ms'],'ID':'', 'age':'','gender':['Male','Female'], 'IntruC':['.3','2']}
+infoDlg = gui.DlgFromDict(dictionary = info, 
+                          title = 'VisualWorkingMemory', 
+                          order = ['ID','cond','age'])
+if infoDlg.OK == False:
+    core.quit()
+
 win = visual.Window([800,600],color = "black", units = 'pix')
 # 1. define 8 Colors
 colors = ['white','red', 'orange', 'blue', 'yellow', 'green', 'brown', 'pink', 'purple']
@@ -32,6 +33,8 @@ pos1s = sample(pos,2)
 pos2s = sample(pos,2)
 t = [.3, 2.0]
 Ts = sample(t,2)
+
+########################stimul##########################
 practiceVWM = visual.TextStim(win=win,text='Get Read for VWM task. \nPress the "Space" key to start.',pos=(0,4),height= 30)
 practiceVWM.draw()
 win.flip()
@@ -142,13 +145,11 @@ win.flip()
 Ans4 = event.waitKeys(keyList = ['k','s'])
 Tk4 = core.getTime()
 
+######################ExperimentHandler
 RT3 = Tk3-t2
 RT4 = Tk4-Tk3
 RT = [RT1, RT2, RT3, RT4]
 block2s = [pos2s, Ts[1], Ans3,Ans4]
-print(RT)
-print(block1s)
-print(block2s)
 dict1 = {":".join(map(str, pos[idx])): cols[idx] for idx in range(8)}
 print(dict1)
 
@@ -160,4 +161,7 @@ for idx, pos in enumerate(pos1s + pos2s):
         rv['same'].append(key)
     else:
         rv['diff'].append(key)
-        print(rv)
+print(rv)
+
+dataFile = open("%s.csv"%(info['cond']+'_'+info['ID']),'a')
+dataFile.write(info['cond']+',' +info['IntruC']+','+info['age']+','+info['gender']+ ',' + str(block2s) + ',' +str(block1s) + ',' + str(rv) + ',' + str(RT) +'\n')
