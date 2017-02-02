@@ -1,146 +1,159 @@
+from random import sample
 import time
 import sys
-from psychopy import visual,event,core
-import random
+from psychopy import core, event, gui, visual, data
+info = {'cond':['2000ms','1000ms'],'sID':'', 'age':'','gender':['Male','Female'], 'IntruC':['.3','2'],'setsize':['6']}
+infoDlg = gui.DlgFromDict(dictionary = info, 
+                          title = 'VisualWorkingMemory', 
+                          order = ['sID','cond','age'])
+if infoDlg.OK == False:
+    core.quit()
+#####################background######################################
+win = visual.Window([800,600],color = "black", units = 'pix')
+# 1. define 6 Colors
+colors = ['white', '#FFA500', '#0000FF', '#2AA54C','#D1FF00','#394A83','#7D3A4B']
+#1.1 define color appear in response trial
+cols = sample(colors[1:],6)
+color1s = sample(colors[1:], 4)
+# 2. define 6 positions.
+pos = [
+    [100,100], 
+    [-100,100], 
+    [-150,0], 
+    [150,0],
+    [-100,-100],
+    [100,-100]
+    ]
 
-t0 = core.getTime()
-
-win = visual.Window([800,600],color="black", units='pix')
+pos1s = sample(pos,2)
+pos2s = sample(pos,2)
+t = [.3, 2.0]
+Ts = sample(t,2)
+practiceVWM = visual.TextStim(win=win,text='Get Read for VWM task. \nPress the "Space" key to start.',pos=(0,4),height= 30)
+practiceVWM.draw()
+win.flip()
+event.waitKeys(keyList = 'space')
 fix = visual.TextStim(win,text='+', height=40, color='white',pos=[0,0])
 fix.draw()
 core.wait(.5)
 win.flip()
 t1 = core.getTime()
 
-squ1 = visual.Rect(win,lineColor="black",size=[100,100])
-squ2 = visual.Rect(win,lineColor="black",size=[100,100])
-squ3 = visual.Rect(win,lineColor="black",size=[100,100])
-squ4 = visual.Rect(win,lineColor="black",size=[100,100])
-squ5 = visual.Rect(win,lineColor="black",size=[100,100])
-squ6 = visual.Rect(win,lineColor="black",size=[100,100])
+# 7. draw shape and wait 2000ms
+squares = []
+for i in range(6):
+    squ = visual.Rect(win, lineColor="black", size=[100, 100])
+    squ.draw()
+    squares.append(squ)
 
-colors = ['#FF0000', '#FFA500', '#0000FF', '#2AA54C','#D1FF00','#394A83','#7D3A4B']
-location = [[100,100], [-100,100], [-150,0], [150,0],[-100,-100],[100,-100]]
-color = random.sample(colors,6)
-######same componet######
-time = [.3 , 2.0, .3, 2.0, .3, 2.0, .3, 2.0]
-t = random.sample(time, 2)
-color1 = random.sample(color, 4)
-location1 = random.sample(location, 4)
-squ1.setPos(location[0])
-squ1.setFillColor(color[1])
-squ2.setPos(location[1])
-squ2.setFillColor(color[2])
-squ3.setPos(location[2])
-squ3.setFillColor(color[3])
-squ4.setFillColor(color[0])
-squ4.setPos(location[3])
-squ5.setPos(location[4])
-squ5.setFillColor(color[4])
-squ6.setPos(location[5])
-squ6.setFillColor(color[5])
-squ1.draw()
-squ2.draw()
-squ3.draw()
-squ4.draw()
-squ5.draw()
-squ6.draw()
+# 8. draw squares with color.
+for idx, squ in enumerate(squares):
+    squ.setFillColor(cols[idx])
+    squ.setPos(pos[idx])
+    squ.draw()
 win.flip()
-core.wait(2.0)
+core.wait(2)
+
+cue1s= []
+##define element in cue1
+for j in range(2):
+    squ = visual.Rect(win, lineColor="black", size=[100, 100])
+    squ.draw()
+    cue1s.append(squ)
+for idx, squ in enumerate(cue1s):
+    squ.setFillColor(colors[0])
+    squ.setPos(pos1s[idx])
+    squ.draw()
+win.flip()
+core.wait(Ts[0])
 t2 = core.getTime()
-
-###block1#####
-cue1 = visual.Rect(win,lineColor="black",size=[100,100])
-cue2 = visual.Rect(win,lineColor="black",size=[100,100])
-cue1.setFillColor('white')
-cue1.setPos(location1[0])
-cue2.setFillColor('white')
-cue2.setPos(location1[1])
-cue1.draw()
-cue2.draw()
+#res1
+res1s= []
+for k in range(1):
+    squ = visual.Rect(win, lineColor="black", size=[100, 100])
+    squ.draw()
+    res1s.append(squ)
+for idx, squ in enumerate(res1s):
+    squ.setFillColor(color1s[0])
+    squ.setPos(pos1s[0])
+    squ.draw()
 win.flip()
-core.wait(t[0])
-t3 = core.getTime()# should be equal to t[0]
-
-res1 = visual.Rect(win,lineColor="black",size=[100,100])
-res1.setFillColor(color1[0])
-res1.setPos(location1[0])
-res1.draw()
+Ans1 = event.waitKeys(keyList = ['k','s'])
+Tk1 = core.getTime()
+#res2
+res2s= []
+for m in range(1):
+    squ = visual.Rect(win, lineColor="black", size=[100, 100])
+    squ.draw()
+    res2s.append(squ)
+for idx, squ in enumerate(res2s):
+    squ.setFillColor(color1s[1])
+    squ.setPos(pos1s[1])
+    squ.draw()
 win.flip()
-resp1 = event.waitKeys(keyList = ['k','s'])
-t4 = core.getTime()
-
-
-res2 = visual.Rect(win,lineColor="black",size=[100,100])
-res2.setFillColor(color1[1])
-res2.setPos(location1[1])
-res2.draw()
+Ans2 = event.waitKeys(keyList = ['k','s'])
+Tk2 = core.getTime()
+#creat dic1 and dic2 compare if position value
+RT1 = Tk1-t2
+RT2 = Tk2- Tk1
+block1s =[pos1s, Ts[0], Ans1, Ans2] 
+pos2s = sample(pos,2)
+#cue2
+cue2s= []
+##define element in cue1
+for l in range(2):
+    squ = visual.Rect(win, lineColor="black", size=[100, 100])
+    squ.draw()
+    cue2s.append(squ)
+for idx, squ in enumerate(cue2s):
+    squ.setFillColor(colors[0])
+    squ.setPos(pos2s[idx])
+    squ.draw()
 win.flip()
-resp2 = event.waitKeys(keyList = ['k','s'])
-t5 = core.getTime()
-
-###block2#####
-cue3 = visual.Rect(win,lineColor="black",size=[100,100])
-cue4 = visual.Rect(win,lineColor="black",size=[100,100])
-cue3.setFillColor('white')
-cue3.setPos(location1[2])
-cue4.setFillColor('white')
-cue4.setPos(location1[3])
-cue3.draw()
-cue4.draw()
+core.wait(Ts[1])
+t2 = core.getTime()
+#reps3
+res3s= []
+for k in range(1):
+    squ = visual.Rect(win, lineColor="black", size=[100, 100])
+    squ.draw()
+    res3s.append(squ)
+for idx, squ in enumerate(res3s):
+    squ.setFillColor(color1s[2])
+    squ.setPos(pos2s[0])
+    squ.draw()
 win.flip()
-core.wait(t[1])
-t6 = core.getTime()# should be equal to t[1]
-
-res3 = visual.Rect(win,lineColor="black",size=[100,100])
-res3.setFillColor(color1[2])
-res3.setPos(location1[2])
-res3.draw()
+Ans3 = event.waitKeys(keyList = ['k','s'])
+Tk3 = core.getTime()
+#reps4
+res4s= []
+for k in range(1):
+    squ = visual.Rect(win, lineColor="black", size=[100, 100])
+    squ.draw()
+    res4s.append(squ)
+for idx, squ in enumerate(res4s):
+    squ.setFillColor(color1s[3])
+    squ.setPos(pos2s[1])
+    squ.draw()
 win.flip()
-resp3 = event.waitKeys(keyList = ['k','s'])
-t7 = core.getTime()
+Ans4 = event.waitKeys(keyList = ['k','s'])
+Tk4 = core.getTime()
 
-res4 = visual.Rect(win,lineColor="black",size=[100,100])
-res4.setFillColor(color1[3])
-res4.setPos(location1[3])
-res4.draw()
-win.flip()
-resp4 = event.waitKeys(keyList = ['k','s'])
-t8 = core.getTime()
-########data################
-#c = random.choice(col)
-#print(c)
-IC = [t[0], t[1]]
-print("IntrsuionCost =")
-print(IC)
-###about blocka1
-print("1st cue apear in")
-print(t[0])
-print("1st block should be")
-print(color1[0])
-print(color1[1])
-print("this stimul=>")
-print(color)
-print(location)
-print("1st block appear in ")
-print(location1[0])
-print(location1[1])
-print(resp1)
-print(resp2)
-#####about block2
-print("2nd cue apear in")
-print(t[1])
-print("this stimul show in")
-print(location)
-print("2nd block cues apear")
-print(location1[2])
-print(location1[3])
-print("this stimul=>")
-print(color)
-print("2nd block should be")
-print(color1[2])
-print(color1[3])
-print(resp3)
-print(resp4)
-RT = [t4, t5, t7, t8]
-print(RT)
+RT3 = Tk3-t2
+RT4 = Tk4-Tk3
+RT = [RT1, RT2, RT3, RT4]
+block2s = [pos2s, Ts[1], Ans3,Ans4]
+dict1 = {":".join(map(str, pos[idx])): cols[idx] for idx in range(6)}
+
+rv = dict(diff=[], same=[])
+
+for idx, pos in enumerate(pos1s + pos2s):
+    key = ":".join(map(str, pos))
+    if dict1[key] == color1s[idx]:
+        rv['same'].append(key)
+    else:
+        rv['diff'].append(key)
+print(rv)
+
+dataFile = open("%s.csv"%(info['cond']+'_'+info['sID']),'a')
+dataFile.write(info['cond']+',' +info['setsize'] +',' +info['IntruC']+','+info['age']+','+info['gender']+ ',' + str(block2s) + ',' +str(block1s) + ',' + str(rv) + ',' + str(RT) +'\n')
