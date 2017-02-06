@@ -549,6 +549,7 @@ def s2468():
         squ.draw()
     #VWM8_3 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,250])
     #VWM8_3.draw()
+    print(color1s[2])
     win.flip()
     t5 = core.getTime()
     Ans3 = event.waitKeys(keyList = ['k','s'])
