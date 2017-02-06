@@ -131,6 +131,7 @@ def s2468():
         block1s, 
         rv['diff'], rv['same'],RT))
 #################set2END##############set4START###########################
+    setsize = 4
     # 1. define 4 Colors
     colors = ['white','#FF0000', '#FFA500', '#0000FF', '#2AA54C']
     #1.1 define color appear in response trial
@@ -270,11 +271,9 @@ def s2468():
     RT4 = t8-t7
     RT = [RT1, RT2, RT3, RT4]
     block2s = [pos2s, Ts[1], Ans3, Ans4]
-    dict1 = {":".join(map(str, pos[idx])): cols[idx] for idx in range(4)}
+    dict1 = {":".join(map(str, pos[idx])): cols[idx] for idx in range(2)}
     print(dict1)
-    
     rv = dict(diff=[], same=[])
-    setsize = 4
     for idx, pos in enumerate(pos1s):
         key = ":".join(map(str, pos))
         if dict1[key] == color1s[idx]:
@@ -612,4 +611,8 @@ def s2468():
         rv['diff'], rv['same'],
         RT))
         #############SET8END#################################
+
+
+
+s2468()
 
