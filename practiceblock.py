@@ -78,8 +78,6 @@ def s2468():
         squ.setPos(pos1s[0])
         squ.draw()
     t3 =core.getTime()
-    VWM1 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,200])
-    VWM1.draw()
     win.flip()
     Ans1 = event.waitKeys(keyList = ['k','s'])
     t4 =core.getTime()
@@ -106,8 +104,6 @@ def s2468():
         squ.setFillColor(color1s[1])
         squ.setPos(pos1s[1])
         squ.draw()
-    VWM2 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,200])
-    VWM2.draw()
     win.flip()
     t5 = core.getTime()
     Ans2 = event.waitKeys(keyList = ['k','s'])
@@ -124,14 +120,13 @@ def s2468():
         else:
             rv['diff'].append(key)
             print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % (setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
         block1s, 
         rv['diff'], rv['same'],RT))
 #################set2END##############set4START###########################
-    setsize = 4
     # 1. define 4 Colors
     colors = ['white','#FF0000', '#FFA500', '#0000FF', '#2AA54C']
     #1.1 define color appear in response trial
@@ -194,8 +189,6 @@ def s2468():
         squ.setFillColor(color1s[0])
         squ.setPos(pos1s[0])
         squ.draw()
-    VWM4_1 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,200])
-    VWM4_1.draw()
     win.flip()
     t1 = core.getTime()
     Ans1 = event.waitKeys(keyList = ['k','s'])
@@ -211,8 +204,6 @@ def s2468():
         squ.setFillColor(color1s[1])
         squ.setPos(pos1s[1])
         squ.draw()
-    VWM4_2 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,200])
-    VWM4_2.draw()
     win.flip()
     t3 = core.getTime()
     Ans2 = event.waitKeys(keyList = ['k','s'])
@@ -245,13 +236,11 @@ def s2468():
         squ.setFillColor(color1s[2])
         squ.setPos(pos2s[0])
         squ.draw()
-    VWM4_3 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,200])
-    VWM4_3.draw()
     win.flip()
     t5 = core.getTime()
     Ans3 = event.waitKeys(keyList = ['k','s'])
     t6 = core.getTime()
-    RT3 = t5 - t6
+    RT3 = t6 - t5
     #reps4
     res4s= []
     for k in range(1):
@@ -262,8 +251,6 @@ def s2468():
         squ.setFillColor(color1s[3])
         squ.setPos(pos2s[1])
         squ.draw()
-    VWM4_4 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,200])
-    VWM4_4.draw()
     win.flip()
     t7 = core.getTime()
     Ans4 = event.waitKeys(keyList = ['k','s'])
@@ -273,7 +260,9 @@ def s2468():
     block2s = [pos2s, Ts[1], Ans3, Ans4]
     dict1 = {":".join(map(str, pos[idx])): cols[idx] for idx in range(4)}
     print(dict1)
+    
     rv = dict(diff=[], same=[])
+    setsize = 4
     for idx, pos in enumerate(pos1s):
         key = ":".join(map(str, pos))
         if dict1[key] == color1s[idx]:
@@ -281,7 +270,7 @@ def s2468():
         else:
             rv['diff'].append(key)
             print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % ( setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
@@ -354,8 +343,6 @@ def s2468():
         squ.setFillColor(color1s[0])
         squ.setPos(pos1s[0])
         squ.draw()
-    VWM6_1 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,200])
-    VWM6_1.draw()
     win.flip()
     t1 = core.getTime()
     Ans1 = event.waitKeys(keyList = ['k','s'])
@@ -371,8 +358,6 @@ def s2468():
         squ.setFillColor(color1s[1])
         squ.setPos(pos1s[1])
         squ.draw()
-    VWM6_2 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,200])
-    VWM6_2.draw()
     win.flip()
     t3 = core.getTime()
     Ans2 = event.waitKeys(keyList = ['k','s'])
@@ -404,13 +389,11 @@ def s2468():
         squ.setFillColor(color1s[2])
         squ.setPos(pos2s[0])
         squ.draw()
-    VWM6_3 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,200])
-    VWM6_3.draw()
     win.flip()
     t5 = core.getTime()
     Ans3 = event.waitKeys(keyList = ['k','s'])
     t6 = core.getTime()
-    RT3 = t5 - t6
+    RT3 = t6 - t5
     #reps4
     res4s= []
     for k in range(1):
@@ -421,8 +404,6 @@ def s2468():
         squ.setFillColor(color1s[3])
         squ.setPos(pos2s[1])
         squ.draw()
-    VWM6_4 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,200])
-    VWM6_4.draw()
     win.flip()
     t7 = core.getTime()
     Ans4 = event.waitKeys(keyList = ['k','s'])
@@ -441,7 +422,7 @@ def s2468():
         else:
             rv['diff'].append(key)
     print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % ( setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
@@ -517,8 +498,6 @@ def s2468():
         squ.setFillColor(color1s[0])
         squ.setPos(pos1s[0])
         squ.draw()
-    VWM8_1 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,250])
-    VWM8_1.draw()
     win.flip()
     t1 = core.getTime()
     Ans1 = event.waitKeys(keyList = ['k','s'])
@@ -534,8 +513,6 @@ def s2468():
         squ.setFillColor(color1s[1])
         squ.setPos(pos1s[1])
         squ.draw()
-    VWM8_2 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,250])
-    VWM8_2.draw()
     win.flip()
     t3 = core.getTime()
     Ans2 = event.waitKeys(keyList = ['k','s'])
@@ -566,13 +543,11 @@ def s2468():
         squ.setFillColor(color1s[2])
         squ.setPos(pos2s[0])
         squ.draw()
-    VWM8_3 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,250])
-    VWM8_3.draw()
     win.flip()
     t5 = core.getTime()
     Ans3 = event.waitKeys(keyList = ['k','s'])
     t6 = core.getTime()
-    RT3 = t5 - t6
+    RT3 = t6 - t5
     #reps4
     res4s= []
     for k in range(1):
@@ -583,8 +558,6 @@ def s2468():
         squ.setFillColor(color1s[3])
         squ.setPos(pos2s[1])
         squ.draw()
-    VWM8_4 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,250])
-    VWM8_4.draw()
     win.flip()
     t7 = core.getTime()
     Ans4 = event.waitKeys(keyList = ['k','s'])
@@ -603,7 +576,7 @@ def s2468():
         else:
             rv['diff'].append(key)
     print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % ( setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
