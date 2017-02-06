@@ -120,7 +120,7 @@ def s2468():
         else:
             rv['diff'].append(key)
             print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % (setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
@@ -240,7 +240,7 @@ def s2468():
     t5 = core.getTime()
     Ans3 = event.waitKeys(keyList = ['k','s'])
     t6 = core.getTime()
-    RT3 = t5 - t6
+    RT3 = t6 - t5
     #reps4
     res4s= []
     for k in range(1):
@@ -270,7 +270,7 @@ def s2468():
         else:
             rv['diff'].append(key)
             print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % ( setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
@@ -393,7 +393,7 @@ def s2468():
     t5 = core.getTime()
     Ans3 = event.waitKeys(keyList = ['k','s'])
     t6 = core.getTime()
-    RT3 = t5 - t6
+    RT3 = t6 - t5
     #reps4
     res4s= []
     for k in range(1):
@@ -422,7 +422,7 @@ def s2468():
         else:
             rv['diff'].append(key)
     print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % ( setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
@@ -547,7 +547,7 @@ def s2468():
     t5 = core.getTime()
     Ans3 = event.waitKeys(keyList = ['k','s'])
     t6 = core.getTime()
-    RT3 = t5 - t6
+    RT3 = t6 - t5
     #reps4
     res4s= []
     for k in range(1):
@@ -576,12 +576,16 @@ def s2468():
         else:
             rv['diff'].append(key)
     print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % ( setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
         block1s, block2s,
         rv['diff'], rv['same'],
         RT))
-        #############SET8END################################
+        #############SET8END#################################
+
+
+
+s2468()
 
