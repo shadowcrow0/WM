@@ -271,7 +271,7 @@ def s2468():
     RT4 = t8-t7
     RT = [RT1, RT2, RT3, RT4]
     block2s = [pos2s, Ts[1], Ans3, Ans4]
-    dict1 = {":".join(map(str, pos[idx])): cols[idx] for idx in range(2)}
+    dict1 = {":".join(map(str, pos[idx])): cols[idx] for idx in range(4)}
     print(dict1)
     rv = dict(diff=[], same=[])
     for idx, pos in enumerate(pos1s):
