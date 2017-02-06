@@ -124,12 +124,13 @@ def s2468():
         else:
             rv['diff'].append(key)
             print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % ( setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
         block1s, 
-        rv['diff'], rv['same'],RT))
+        rv['diff'], rv['same'],
+        RT))  
 #################set2END##############set4START###########################
     setsize = 4
     # 1. define 4 Colors
@@ -251,7 +252,7 @@ def s2468():
     t5 = core.getTime()
     Ans3 = event.waitKeys(keyList = ['k','s'])
     t6 = core.getTime()
-    RT3 = t5 - t6
+    RT3 = t6 - t5
     #reps4
     res4s= []
     for k in range(1):
@@ -281,13 +282,13 @@ def s2468():
         else:
             rv['diff'].append(key)
             print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % ( setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
         block1s, block2s,
         rv['diff'], rv['same'],
-        RT))
+        RT))  
         ########################set4END###############set6START#######################
     win = visual.Window([800,600],color = "black", units = 'pix')
     next = visual.TextStim(win=win,text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.',pos=(0,4),height= 30)
@@ -410,7 +411,7 @@ def s2468():
     t5 = core.getTime()
     Ans3 = event.waitKeys(keyList = ['k','s'])
     t6 = core.getTime()
-    RT3 = t5 - t6
+    RT3 = t6 - t5
     #reps4
     res4s= []
     for k in range(1):
@@ -441,7 +442,7 @@ def s2468():
         else:
             rv['diff'].append(key)
     print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % ( setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
@@ -572,7 +573,7 @@ def s2468():
     t5 = core.getTime()
     Ans3 = event.waitKeys(keyList = ['k','s'])
     t6 = core.getTime()
-    RT3 = t5 - t6
+    RT3 = t6 - t5
     #reps4
     res4s= []
     for k in range(1):
@@ -603,13 +604,13 @@ def s2468():
         else:
             rv['diff'].append(key)
     print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % ( setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
         block1s, block2s,
         rv['diff'], rv['same'],
-        RT))
+        RT))  
         #############SET8END#################################
 
 
