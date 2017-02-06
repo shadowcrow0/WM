@@ -553,7 +553,7 @@ def s2468():
     t5 = core.getTime()
     Ans3 = event.waitKeys(keyList = ['k','s'])
     t6 = core.getTime()
-    RT3 = t5 - t6
+    RT3 = t6 - t5
     #reps4
     res4s= []
     for k in range(1):
@@ -566,7 +566,7 @@ def s2468():
         squ.draw()
     #VWM8_4 = visual.TextStim(win=win,text='If color is same, press "S" \nIf color is different,press"K" ',height= 20, pos = [0,250])
     #VWM8_4.draw()
-        win.flip()
+    win.flip()
     t7 = core.getTime()
     Ans4 = event.waitKeys(keyList = ['k','s'])
     t8 = core.getTime()
@@ -584,13 +584,13 @@ def s2468():
         else:
             rv['diff'].append(key)
     print(rv)
-    with open("%s_%s_%s.csv" % (info['cond'], info['ID'], setsize),'a') as f:
+    with open("%s_%s_%s.csv" % ( setsize, info['cond'], info['ID']),'a') as f:
         f.write("{}, {}, {}, {}, {}, {}, {}, {}, {}, {}".format(
         setsize,
         info['cond'], info['ID'], info['age'], info['gender'],
         block1s, block2s,
         rv['diff'], rv['same'],
-        RT))
+        RT))  
         #############SET8END#################################
 
  
