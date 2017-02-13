@@ -1,12 +1,6 @@
 # WM
 to do
-
-[ ] trial 取出不放回，配對成120個
-
-[ ] 反應時間紀錄成檔案
-
-[ ] 編寫受試者資料
-
-[ ] 檢查作答正確與否
-
-[ ] 完成 gui 界面
+3 factors
+cognitive load = high /low(between)
+intrusion cost =.3s or 2s(between)
+setsize = 2,4,6,8(within)
