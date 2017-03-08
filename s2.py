@@ -1,117 +1,162 @@
-from random import sample
-import time
-import sys
-from psychopy import core, event, gui, visual, data
-info = {'cond':['2000ms','1000ms'],'sID':'', 'age':'','gender':['Male','Female'], 'IntruC':['.3','2'],'setsize':['2']}
-infoDlg = gui.DlgFromDict(dictionary = info, 
-                          title = 'VisualWorkingMemory', 
-                          order = ['sID','cond','age'])
-if infoDlg.OK == False:
-    core.quit()
-#####################background######################################
-win = visual.Window([800,600],color = "black", units = 'pix')
-# 1. define 2 Colors
-colors = ['white','#FF0000', '#FFA500']
-#1.1 define color appear in response trial
-cols = sample(colors[1:],2)
-color1s = sample(colors[1:], 2)
-# 2. define 2 positions.
-pos = [
-    [-100,100],
-    [100,100]
-    ]
-pos1s = sample(pos,2)
-t = [.3, 2.0]
+from random import sample, shuffle, randint
+import sys, time
+from psychopy import core, event, gui, visual, data, info
+
+#monitorunittools to convert cm<->pix<->deg etc. 
+
+#1.0 define 8 pos
+POSITIONS =[]
+POSITIONS = [(100, 200), (100, -200), (-100, 200), (200, 100), (200, -100), (-200, 100), (-200, -100), (-100, -200)]
+p1 = [100, 200]
+p2 = [100, -200]
+p3 = [-100, 200]
+p4 = [200, 100]
+p5 = [200, -100]
+p6 = [-200, 100]
+p7 = [-200, -100]
+p8 = [-100, -200]
+P = [p1,p2,p3,p4,p5,p6,p7,p8]
+#1.1 setting  background = gery
+WIN = visual.Window((800, 600), color="grey", units="pix")
+ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
+                            text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
+FIX = visual.TextStim(WIN, text='+', height=40, color='white', pos=(0, 0))
+COLORS = ['white', '#FFDA00', '#52FFAE', '#3E0DE4','#F8E214', '#CDF118', '#A52A2A', '#1118BB','#6C3EFF','green', 'yellow', 'orange', 'cyan', 'purple', 'blue']
+t = (.3,2.0)
 Ts = sample(t,2)
-practiceVWM = visual.TextStim(win=win,text='Get Read for VWM task. \nPress the "Space" key to start.',pos=(0,4),height= 30)
-practiceVWM.draw()
-win.flip()
-event.waitKeys(keyList = 'space')
-fix = visual.TextStim(win,text='+', height=40, color='white',pos=[0,0])
-fix.draw()
-win.flip()
-core.wait(.5)
-t1 = core.getTime()
-# 7. draw shape and wait 2000ms
-squares = []
-for i in range(2):
-    squ = visual.Rect(win, lineColor="black", size=[100, 100])
-    squ.draw()
-    squares.append(squ)
+def NEX():
+    next= visual.TextStim(WIN,text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.',pos=(0,4),height= 30)
+    next.draw()
+    WIN.flip()
+    event.waitKeys(keyList = 'space')
+    core.wait(.3)
+    FIX.draw()
+    WIN.flip()
+    core.wait(.5)
+def catA():
+    circles = []
+    diamonds= []
+    for i in range(1):
+        cir = visual.Circle(WIN, radius = 40, edges = 50, lineWidth = 3, lineColor = 'white')
+        circles.append(cir)
+        for idx, squ in enumerate(circles):
+            #print(idx)
+            cir.setPos(res_catA[idx])
+            cir.draw()
+    for i in range(1):
+        diam = visual.Rect(WIN, lineColor='white', size=(165,165), ori =45, lineWidth =3 )
+        diamonds.append(diam)
+        for idx, squ in enumerate(diamonds):
+            diam.setPos(res_catA[idx])
+            diam.draw()
+    squares = []
+    for i in range(1):
+        squ = visual.Rect(WIN, size=[115, 115],lineColor = 'grey')
+        squares.append(squ)
+        for idx, squ in enumerate(squares):
+            squ.setFillColor(col_else[idx])
+            #divide 3 condtions
+            squ.setPos(res_catA[idx])
+            squ.draw()
+def catB():
+    circles = []
+    for i in range(1):
+        cir = visual.Circle(WIN, radius = 40, edges = 50, lineWidth = 3, lineColor = 'white')
+        circles.append(cir)
+        for idx, squ in enumerate(circles):
+            cir.setPos(pos_catB[idx])
+            cir.draw()
+    squares = []
+    for i in range(1):
+        squ = visual.Rect(WIN, size=[115, 115],lineColor = 'grey')
+        squares.append(squ)
+        for idx, squ in enumerate(squares):
+            squ.setFillColor(col_new[idx])
+            squ.setPos(pos_catB[idx])
+            squ.draw()
+def RT():
+    t1 = core.getTime()
+    Ans = event.waitKeys(keyList = ['k','s'])
+    t2 = core.getTime()
+    RT1 = t2-t1
+positions = sample(POSITIONS,4)
+pos_catA = sample(positions,2)
+res_catA = sample(pos_catA,1)
+pos_catB =list(set(positions) - set(pos_catA))
+res_catB = sample(pos_catB,1)
+colors = sample(COLORS[1:],4)
+col_else = list(set(COLORS[1:])-set(colors))
+col_new = sample(col_else[1:],2)
+#################setsize 2
+def squ4():
+    squares = []
+    for i in range(4):
+        squ = visual.Rect(WIN, lineColor="grey", size=[115, 115])
+        squares.append(squ)
+        for idx, squ in enumerate(squares):
+            squ.setFillColor(colors[idx])
+            squ.setPos(positions[idx])
+            squ.draw()
+def catA_cue2():
+    circles = []
+    diamonds= []
+    for i in range(2):
+        cir = visual.Circle(WIN, radius = 40, edges = 50, lineWidth = 3, lineColor = 'white')
+        circles.append(cir)
+        for idx, squ in enumerate(circles):
+            #print(idx)
+            cir.setPos(pos_catA[idx])
+            cir.draw()
+    for i in range(2):
+        diam = visual.Rect(WIN, lineColor='white', size=(165,165), ori =45, lineWidth =3 )
+        diamonds.append(diam)
+        for idx, squ in enumerate(diamonds):
+            diam.setPos(pos_catA[idx])
+            diam.draw()
+def catB_cue2():
+    circles = []
+    for i in range(2):
+        cir = visual.Circle(WIN, radius = 40, edges = 50, lineWidth = 3, lineColor = 'white')
+        circles.append(cir)
+        for idx, squ in enumerate(circles):
+            cir.setPos(pos_catB[idx])
+            cir.draw()
+def stimBA2():
+    NEX()
+    squ4()
+    catA_cue2()
+    catB_cue2()
+    WIN.flip()
+    core.wait(2)
+    catB_cue2()
+    WIN.flip()
+    core.wait(Ts[1])
+    catB()
+    WIN.flip()
+    RT()
+    catA_cue2()
+    WIN.flip()
+    core.wait(Ts[0])
+    catA()
+    WIN.flip()
+    RT()
+def stimAB2():
+    NEX()
+    squ4()
+    catA_cue2()
+    catB_cue2()
+    WIN.flip()
+    core.wait(2)
+    catA_cue2()
+    WIN.flip()
+    core.wait(Ts[1])
+    catA()
+    WIN.flip()
+    RT()
+    catB_cue2()
+    WIN.flip()
+    core.wait(Ts[0])
+    catB()
+    WIN.flip()
+    RT()
 
-# 8. draw squares with color.
-for idx, squ in enumerate(squares):
-    squ.setFillColor(cols[idx])
-    squ.setPos(pos[idx])
-    squ.draw()
-win.flip()
-core.wait(2)
-cue1s= []
-##define element in cue1
-for j in range(1):
-    squ = visual.Rect(win, lineColor="black", size=[100, 100])
-    squ.draw()
-    cue1s.append(squ)
-for idx, squ in enumerate(cue1s):
-    squ.setFillColor(colors[0])
-    squ.setPos(pos1s[idx])
-    squ.draw()
-win.flip()
-core.wait(Ts[0])
-#res1
-res1s= []
-for k in range(1):
-    squ = visual.Rect(win, lineColor="black", size=[100, 100])
-    squ.draw()
-    res1s.append(squ)
-for idx, squ in enumerate(res1s):
-    squ.setFillColor(color1s[0])
-    squ.setPos(pos1s[0])
-    squ.draw()
-t3 =core.getTime()
-win.flip()
-Ans1 = event.waitKeys(keyList = ['k','s'])
-t4 =core.getTime()
-block1s =[pos1s, Ts[0], Ans1] 
-#cue2
-cue2s= []
-##define element in cue1
-for l in range(1):
-    squ = visual.Rect(win, lineColor="black", size=[100, 100])
-    squ.draw()
-    cue2s.append(squ)
-for idx, squ in enumerate(cue2s):
-    squ.setFillColor(colors[0])
-    squ.setPos(pos1s[idx+1])
-    squ.draw()
-win.flip()
-core.wait(Ts[1])
-#reps2
-res2s= []
-for k in range(1):
-    squ = visual.Rect(win, lineColor="black", size=[100, 100])
-    squ.draw()
-    res2s.append(squ)
-for idx, squ in enumerate(res2s):
-    squ.setFillColor(color1s[1])
-    squ.setPos(pos1s[1])
-    squ.draw()
-win.flip()
-t5 = core.getTime()
-Ans2 = event.waitKeys(keyList = ['k','s'])
-t6 = core.getTime()
-RT = [t4-t3, t6-t5]
-
-dict1 = {":".join(map(str, pos[idx])): cols[idx] for idx in range(2)}
-print(dict1)
-rv = dict(diff=[], same=[])
-
-for idx, pos in enumerate(pos1s):
-    key = ":".join(map(str, pos))
-    if dict1[key] == color1s[idx]:
-        rv['same'].append(key)
-    else:
-        rv['diff'].append(key)
-        print(rv)
-dataFile = open("%s.csv"%(info['cond']+'_'+info['sID']),'a')
-dataFile.write(info['cond']+',' +info['setsize'] +',' +info['IntruC']+','+info['age']+','+info['gender']+ ',' + ',' +str(block1s) + ',' + str(rv) + ','+ str(RT) +'\n')
