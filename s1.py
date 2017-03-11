@@ -78,7 +78,7 @@ def catA_cue1():#同時出現圓形跟菱形在特定位置
         for idx, squ in enumerate(diamonds):
             diam.setPos(pos_catA[idx])#套用菱形應該出現的矩陣
             diam.draw()
-def catB_cue1():
+def catB_cue1():#出現圓形在特定位置
     circles = []
     for i in range(1):
         cir = visual.Circle(WIN, radius = 40, edges = 50, lineWidth = 3, lineColor = 'white')
@@ -105,7 +105,7 @@ def catA():#產生圓形跟菱形作為提示，方形作為刺激
             diam.draw()
             #############################結束
     squares = []
-    for i in range(1):
+    for i in range(1):#畫出方形的顏色跟位置
         squ = visual.Rect(WIN, size=[115, 115],lineColor = 'grey')
         squares.append(squ)
         for idx, squ in enumerate(squares):
@@ -113,7 +113,7 @@ def catA():#產生圓形跟菱形作為提示，方形作為刺激
             #divide 3 condtions
             squ.setPos(res_catA[idx])
             squ.draw()
-def catB():
+def catB():#產生圓形作為提示，方形作為刺激
     circles = []
     for i in range(1):
         cir = visual.Circle(WIN, radius = 40, edges = 50, lineWidth = 3, lineColor = 'white')
@@ -143,17 +143,17 @@ def stimBA():
     colors = sample(COLORS[1:],2)
     col_else = list(set(COLORS[1:])-set(colors))
     col_new = sample(col_else[1:],1)
-    squ2()
-    catA_cue1()
-    catB_cue1()
-    WIN.flip()
-    core.wait(2)
-    catB_cue1()
-    WIN.flip()
-    core.wait(Ts[1])
-    catB()
-    WIN.flip()
-    RT()
+    squ2()#畫好刺激要用的方形
+    catA_cue1()#設定畫好圓形跟菱形的提示
+    catB_cue1()#設定且畫好菱形的提示
+    WIN.flip()#將上述三者推出螢幕
+    core.wait(2)#在螢幕中呈現兩秒鐘
+    catB_cue1()#畫出菱形的提示
+    WIN.flip()#讓菱形提示呈現在螢幕
+    core.wait(Ts[1])#並等待 Ts
+    catB()#畫出菱形的提示加上色塊
+    WIN.flip() #讓受試者判斷菱形出現的顏色跟最一開始 l146 一樣否
+    RT()#計算反應時間跟受試者作答內容
     catA_cue1()
     WIN.flip()
     core.wait(Ts[0])
