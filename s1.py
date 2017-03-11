@@ -54,7 +54,7 @@ def NEX():
     WIN.flip()
     core.wait(.5)
 def squ2():
-    squares = []
+    squares = [] #列出一個空矩陣準備之後要畫的形狀
     for i in range(2):
         squ = visual.Rect(WIN, lineColor="grey", size=[115, 115])
         squares.append(squ)
@@ -62,21 +62,21 @@ def squ2():
             squ.setFillColor(colors[idx])
             squ.setPos(positions[idx])
             squ.draw()
-def catA_cue1():
-    circles = []
-    diamonds= []
-    for i in range(1):
-        cir = visual.Circle(WIN, radius = 40, edges = 50, lineWidth = 3, lineColor = 'white')
-        circles.append(cir)
+def catA_cue1():#同時出現圓形跟菱形在特定位置
+    circles = []#產生之後要畫圓形矩陣
+    diamonds= []#菱形
+    for i in range(1):#這邊只要出現一個圓形
+        cir = visual.Circle(WIN, radius = 40, edges = 50, lineWidth = 3, lineColor = 'white')#設定要出現圓形的大小跟顏色
+        circles.append(cir)#把 cir 加到circles之後
         for idx, squ in enumerate(circles):
             #print(idx)
-            cir.setPos(pos_catA[idx])
+            cir.setPos(pos_catA[idx])#套用到指定位置
             cir.draw()
     for i in range(1):
-        diam = visual.Rect(WIN, lineColor='white', size=(165,165), ori =45, lineWidth =3 )
-        diamonds.append(diam)
+        diam = visual.Rect(WIN, lineColor='white', size=(165,165), ori =45, lineWidth =3 )#畫個菱形
+        diamonds.append(diam) #加到菱形矩陣
         for idx, squ in enumerate(diamonds):
-            diam.setPos(pos_catA[idx])
+            diam.setPos(pos_catA[idx])#套用菱形應該出現的矩陣
             diam.draw()
 def catB_cue1():
     circles = []
@@ -86,7 +86,8 @@ def catB_cue1():
         for idx, squ in enumerate(circles):
             cir.setPos(pos_catB[idx])
             cir.draw()
-def catA():
+def catA():#產生圓形跟菱形作為提示，方形作為刺激
+  #################與cue_catA重複######################
     circles = []
     diamonds= []
     for i in range(1):
@@ -102,6 +103,7 @@ def catA():
         for idx, squ in enumerate(diamonds):
             diam.setPos(res_catA[idx])
             diam.draw()
+            #############################結束
     squares = []
     for i in range(1):
         squ = visual.Rect(WIN, size=[115, 115],lineColor = 'grey')
@@ -127,7 +129,7 @@ def catB():
             squ.setFillColor(col_new[idx])
             squ.setPos(pos_catB[idx])
             squ.draw()
-def RT():
+def RT():#計算反應時間
     t1 = core.getTime()
     Ans = event.waitKeys(keyList = ['k','s'])
     t2 = core.getTime()
