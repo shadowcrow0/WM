@@ -135,20 +135,20 @@ def RT():#計算反應時間
     t2 = core.getTime()
     RT1 = t2-t1
 def stimBA():
-    positions = sample(POSITIONS,2)
-    pos_catA = sample(positions,1)
-    res_catA = sample(pos_catA,1)
-    pos_catB =list(set(positions) - set(pos_catA))
-    res_catB = sample(pos_catB,1)
-    colors = sample(COLORS[1:],2)
-    col_else = list(set(COLORS[1:])-set(colors))
-    col_new = sample(col_else[1:],1)
+    positions = sample(POSITIONS,2)#從l21 挑出兩個位置作為這次呈現目標
+    pos_catA = sample(positions,1)#圓形加菱形這次要出現的位置
+    res_catA = sample(pos_catA,1)#設定讓受試者判斷的時候會出現圓形菱形+方塊的位置
+    pos_catB =list(set(positions) - set(pos_catA)) #設定圓形出現位置
+    res_catB = sample(pos_catB,1)#設定讓受試者判斷出現圓形+方塊的位置
+    colors = sample(COLORS[1:],2)#從l35 挑出兩個出現的顏色
+    col_else = list(set(COLORS[1:])-set(colors))#選擇之前沒選到顏色到這個變數
+    col_new = sample(col_else[1:],1)#隨機選定一個顏色變數
     squ2()#畫好刺激要用的方形
     catA_cue1()#設定畫好圓形跟菱形的提示
     catB_cue1()#設定且畫好菱形的提示
     WIN.flip()#將上述三者推出螢幕
     core.wait(2)#在螢幕中呈現兩秒鐘
-    catB_cue1()#畫出菱形的提示
+    catB_cue1()#畫出圓形的提示
     WIN.flip()#讓菱形提示呈現在螢幕
     core.wait(Ts[1])#並等待 Ts
     catB()#畫出菱形的提示加上色塊
