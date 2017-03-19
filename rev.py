@@ -1,27 +1,3 @@
-#for AWON
-#
-#from random import sample, shuffle, randint
-#import sys, time
-#from psychopy import core, event, gui, visual, data, info
-#
-#
-# init variable
-#DEF_POSITIONS = [(100, 200), (100, -200), (-100, 200), (200, 100), (200, -100), (-200, 100), (-200, -100), (-100, -200)]
-#CASES =[1,2]
-#
-# main procedure
-#positions = sample(DEF_POSITIONS,5)
-#squs = square_builder(positions)
-#
-#
-#
-#def square_builder(positions)
-#    squares=[]
-#    for pos in positions:
-#        squ = visual.Rect(WIN, lineColor="grey", size=[115, 115])
-#        squ.setPos(pos)
-#        squares.append(squ)
-#    return squares
 from random import sample, shuffle, randint
 from psychopy import core, event, gui, visual, data, info
 import sys, time, random
@@ -56,23 +32,15 @@ def draw_dimond(positions):
         dim.draw()
 
 
-def draw_by_case(situation, squares_pos, draw_border_pos):
-    if(situation==1):
-        drawA(squares_pos, draw_border_pos)
-    elif(situation==2):
-        drawB(squares_pos, draw_border_pos)
-
 
 def drawA(squares_pos, draw_border_pos):
     draw_square(squares_pos)
     draw_circle(draw_border_pos)
-    WIN.flip()
 
 def drawB(squares_pos, draw_border_pos):
     draw_square(squares_pos)
     draw_circle(draw_border_pos)
     draw_dimond(draw_border_pos)
-    WIN.flip()
 
 def request_answer():
     return answer
@@ -80,14 +48,16 @@ def request_answer():
 def log(situation, stoptime, positions, positions_a, positions_b, user_answer):
     return 1
 
-
-def run(squares_pos):
+def run_stage1(squares_pos):
     draw_border_pos = sample(POSITIONS, 4)
-    not_draw_border_pos = list(set(squares_pos)-set(draw_border_pos))
-    stoptime = random.uniform(.3, 2.0)
-    situation = sample(CASES,1)[0]
-    draw_by_case(situation, squares_pos, draw_border_pos)
-    
+    not_draw_border_pos = list(set(POSITIONS)-set(draw_border_pos))
+    drawA(squares_pos, draw_border_pos)
+    drawB(squares_pos, not_draw_border_pos)
+    WIN.flip()
+    core.wait(2)
+
+
+
     
     core.wait(stoptime)
     # user_answer = request_answer()
@@ -109,7 +79,9 @@ for i, pos in enumerate(POSITIONS):
     squares_pos.append(squ)
     colors.append(color)
 
+run_stage1(squares_pos)
 
-
+'''
 for i in range(random.randint(1,10)):
     run(squares_pos)
+'''
