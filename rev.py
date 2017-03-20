@@ -4,84 +4,174 @@ import sys, time, random
 
 
 class SquarePos:
-    def __init__(self, position, color):
+    def __init__(self, position, color, category):
         self.position = position
         self.color = color
+        self.category = category #1 or 0
+    def draw_cue(self):
+        cir = visual.Circle(WIN, radius = 40, edges = 40, lineWidth = 1)
+        cir.setPos(self.position)
+        cir.setFillColor('white')
+        cir.draw()
+        if self.category == 1:
+            dim = visual.Rect(WIN, size=(130,130), ori =45, lineWidth =3 )
+            dim.setPos(self.position)
+            dim.setFillColor('white')
+            dim.draw()
 
-def positions_builder():
-    #pass
-    return positions_array
-
-def draw_square(squarePoss):
-    for i, pos in enumerate(squarePoss):
-        squ = visual.Rect(WIN, size=[115, 115],lineColor = 'grey')
-        squ.setFillColor(pos.color)
-        squ.setPos(pos.position)
+    def draw_square(self, color=None):
+        if color == None:
+            color = self.color
+        squ = visual.Rect(WIN, size=[110, 110],lineColor = 'white')
+        squ.setFillColor(color)
+        squ.setPos(self.position)
         squ.draw()
 
-def draw_circle(positions):
-    for i, pos in enumerate(positions):
-        cir =  visual.Circle(WIN, radius = 40, edges = 50, lineWidth = 3, lineColor = 'white')
-        cir.setPos(pos)
-        cir.draw()
-
-def draw_dimond(positions):
-    for i, pos in enumerate(positions):
-        dim =  visual.Rect(WIN, lineColor='white', size=(165,165), ori =45, lineWidth =3 )
-        dim.setPos(pos)
-        dim.draw()
 
 
+def save_ans(rt, ans, stoptime, res, situation,set_size):
+    print(rt, ans, stoptime, res, situation,set_size)
 
-def drawA(squares_pos, draw_border_pos):
-    draw_square(squares_pos)
-    draw_circle(draw_border_pos)
+#    with open("%s_%s_%s.csv" % (INFO['ID'], INFO['gender'], INFO['age']),'a') as f:
+#        f.write("{}, {}, {}, {}, {}, {}".format(str(set_size) + "," + str(rt) + ","+ str(stoptime) + ","+ str(res) +","+ str(situation) +","+ str(ans)))[0]
 
-def drawB(squares_pos, draw_border_pos):
-    draw_square(squares_pos)
-    draw_circle(draw_border_pos)
-    draw_dimond(draw_border_pos)
 
-def request_answer():
-    return answer
+def get_res(n):
+    count = [0]*4
+    result = []
+    for i in range(n):#n=160
+        rand = randint(0,3)
+        while count[rand] == n/4:
+            rand = randint(0,3)
+        count[rand] += 1
+        result.append(rand)
+    for i in range(n):
+        if result[i] == 3:
+            result[i] = 0
+    return result
 
-def log(situation, stoptime, positions, positions_a, positions_b, user_answer):
-    return 1
+def get_setsize(n):
+    count = [0]*4
+    result = []
+    for i in range(n):#n=160
+        rand = randint(0,3)
+        while count[rand] == n/4:
+            rand = randint(0,3)
+        count[rand] += 1
+        result.append(rand+1)
+    return result
+
+def get_cue():
+    num = len(squares_pos)
+    temp_list = [ (x+1) for x in range(num)]
+    A_cue = sample(squares_pos, int(num/2))
+    B_cue = list(set(squares_pos)-set(A_cue))
+
+    return (A_cue, B_cue)
 
 def run_stage1(squares_pos):
-    draw_border_pos = sample(POSITIONS, 4)
-    not_draw_border_pos = list(set(POSITIONS)-set(draw_border_pos))
-    drawA(squares_pos, draw_border_pos)
-    drawB(squares_pos, not_draw_border_pos)
+    FIX.draw()
     WIN.flip()
-    core.wait(2)
+    core.wait(.5)
+    for cue in squares_pos:
+        cue.draw_cue()
+        cue.draw_square()
 
-
-
-    
+    WIN.flip()
+    stoptime = 2
     core.wait(stoptime)
-    # user_answer = request_answer()
-    # log(situation, stoptime, squares_pos, draw_border_pos, not_draw_border_pos, user_answer)
-    return 1
 
+def run_cue(cue_list, stoptime):
+    for cue in cue_list:
+        cue.draw_cue()
+    WIN.flip()
+    core.wait(stoptime)
 
-CASES = [1,2]
+def run_stage2(cue_list, selected_colors, res):
+    target_cue = sample(cue_list, 1)[0]
+
+    if res == 0:
+        display_color = sample(list(set(COLORS) - set(selected_colors)), 1)[0]
+    elif res == 1:
+        display_color = target_cue.color
+    else:
+        display_color = sample(selected_colors, 1)[0]
+    target_cue.draw_cue()
+    target_cue.draw_square(display_color)
+    WIN.flip()
+    t1 = core.getTime()
+    ans = event.waitKeys(keyList=['k', 's'])
+    t2 = core.getTime()
+    WIN.flip()
+
+    return (ans, t2-t1)
+
+CASES = [0,1]
 WIN = visual.Window((800, 600), color="grey", units="pix")
 POSITIONS = [(100, 200), (100, -200), (-100, 200), (200, 100), (200, -100), (-200, 100), (-200, -100), (-100, -200)]
-COLORS = ['white', '#FFDA00', '#52FFAE', '#3E0DE4','#F8E214', '#CDF118', '#A52A2A', '#1118BB','#6C3EFF','green', 'yellow', 'orange', 'cyan', 'purple', 'blue']
+COLORS = [ '#0000FF', '#800080', '#FFC0CB','#FFFF00', '#1E90FF', '#008000', '#A52A2A','#F83759','#FFA500', '#C45366', '#7853C4', '#CFB46F', '#6FCF80']
+STOPTIME_LIST = [ sample([0.3, 2],2) for x in range(120)]
+RES_LIST = get_res(160)
+ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
+                            text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
+FIX = visual.TextStim(WIN, text='+', height=80, color='white', pos=(0, 0))
+ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
+                            text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
+INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female']}
+gui.DlgFromDict(dictionary=INFO, title='VWM Task', order=['ID', 'age'])
 
-squares_pos = []
-colors = []
+def trial(stoptime, set_size, res):
+    cue_category=[[],[]]
+    selected_colors = sample(COLORS, set_size*2)
+    squares_pos = []
 
-for i, pos in enumerate(POSITIONS):
-    color = sample(COLORS, 1)[0];
-    squ = SquarePos(pos, color)
-    squares_pos.append(squ)
-    colors.append(color)
+    '''init'''
+    for i, pos in enumerate(sample(POSITIONS, set_size*2)):
+        color = selected_colors[i]
+        category = randint(0,1)
+        if len(cue_category[category]) == set_size: #A full or B full
+            category = 0 if category == 1 else 1
 
-run_stage1(squares_pos)
+        squ = SquarePos(pos, color, category)
+        squares_pos.append(squ)
+        cue_category[category].append(squ)
 
-'''
-for i in range(random.randint(1,10)):
-    run(squares_pos)
-'''
+    run_stage1(squares_pos)
+    WIN.flip()
+    for i, situation in enumerate(sample(CASES, 2)):
+        run_cue(cue_category[situation], stoptime[i])
+        WIN.flip()
+        (ans, rt) = run_stage2(cue_category[situation], selected_colors, res)
+        save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,set_size = set_size)
+
+
+def main():
+    ALERT_MSG.draw()
+    WIN.flip()
+    event.waitKeys(keyList=['space'])
+    rounds = 20
+    setsize_list = get_setsize(rounds)
+    for i in range(rounds):
+        trial(STOPTIME_LIST[i], setsize_list[i], RES_LIST[i])
+
+def practice():
+    def demo():
+        rounds = 4
+        setsize_list = get_setsize(rounds)
+        for i in range(rounds):
+            trial(STOPTIME_LIST[i], setsize_list[i], RES_LIST[i])
+    ALERT_MSG.draw()
+    WIN.flip()
+    event.waitKeys(keyList=['space'])
+    demo()
+    end_demo = visual.TextStim(WIN, pos=(0, 4), height=30,
+                            text='End of the demo, \nIt is your term now. Press "Space" to practice.', color = 'white')
+    end_demo.draw()
+    WIN.flip()
+    event.waitKeys(keyList=['space'])
+    rounds = 12
+    setsize_list = get_setsize(rounds)
+    for i in range(rounds):
+        trial(STOPTIME_LIST[i], setsize_list[i], RES_LIST[i])
+
+practice()
