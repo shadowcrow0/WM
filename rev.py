@@ -67,6 +67,23 @@ def get_cue():
 
     return (A_cue, B_cue)
 
+def get_ans(ans,res):
+        for aws,resp in enumerate(ans,res):
+            if ans == [u's'] and res == 2:
+                feedback.append(1)
+            elif ans ==[u'k'] and res !=1:
+                feedback.append(1)
+            else:
+                feedback.append(0)
+        return feedback
+
+def run_feedback(feedback):
+    if feedback ==1:
+        FEEDBACK_O.draw()
+    elif feedback == 0:
+        FEEDBACK_X.draw()
+
+
 def run_stage1(squares_pos):
     FIX.draw()
     WIN.flip()
@@ -111,6 +128,7 @@ STOPTIME_LIST = [ sample([0.3, 2],2) for x in range(320)]
 RES_LIST = get_res(320)
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
+
 FEEDBACK_O = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Correct.', color = 'white')
 FEEDBACK_X = visual.TextStim(WIN, pos=(0, 4), height=30,
@@ -120,8 +138,7 @@ ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
 INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female'],'Practice':['Yes','No']}
 gui.DlgFromDict(dictionary=INFO, title='VWM Task', order=['ID', 'age'])
-
-
+feedback = []
 
 
 def trial(stoptime, set_size, res):
@@ -147,21 +164,10 @@ def trial(stoptime, set_size, res):
         run_cue(cue_category[situation], stoptime[i])
         WIN.flip()
         (ans, rt) = run_stage2(cue_category[situation], selected_colors, res)
-    feedback = []
-    for aws,resp in ans,res:
-        if ans == ['s'] and res == 2:
-            feedback.append(1)
-        elif ans ==['k'] and res !=1:
-            feedback.append(1)
-        else:
-            feedback.append(0)
-    if value(feedback) = 1:
-            FEEDBACK_O.draw()
-    elif value(feedback) = 0:
-            FEEDBACK_X.draw()
+        save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,set_size = set_size)
+    run_feedback(get_ans(ans,res))
     WIN.flip()
     core.wait(.8)
-    save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,set_size = set_size,feedback)
 
 
 def main():
