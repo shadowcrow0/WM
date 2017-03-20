@@ -66,22 +66,15 @@ def get_cue():
     B_cue = list(set(squares_pos)-set(A_cue))
 
     return (A_cue, B_cue)
+def get_ans(ans,res):
+    for aws,resp in enumerate(ans,res):
+        if ans == [u's'] and res == 2:
+            FEEDBACK_O.draw()
+        elif ans ==[u'k'] and res !=1:
+            FEEDBACK_O.draw()
+        else:
+            FEEDBACK_X.draw()
 
-
-def run_feedback(rv):
-    rv = dict(Right=[], Wrong=[])
-    def get_ans(ans,res):
-        for aws,resp in enumerate(ans,res):
-            if ans == [u's'] and res == 2:
-                rv['Right'].append(1)
-            elif ans ==[u'k'] and res !=1:
-                rv['Right'].append(1)
-            else:
-                rv['Wrong'].append(1)
-    if rv['Right'] ==1:
-        FEEDBACK_O.draw()
-    elif rv['Wrong']==1:
-        FEEDBACK_X.draw()
 
 
 def run_stage1(squares_pos):
@@ -128,7 +121,6 @@ STOPTIME_LIST = [ sample([0.3, 2],2) for x in range(320)]
 RES_LIST = get_res(320)
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
-rv = dict(Right=[], Wrong=[])
 FEEDBACK_O = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Correct.', color = 'white')
 FEEDBACK_X = visual.TextStim(WIN, pos=(0, 4), height=30,
@@ -164,10 +156,10 @@ def trial(stoptime, set_size, res):
         run_cue(cue_category[situation], stoptime[i])
         WIN.flip()
         (ans, rt) = run_stage2(cue_category[situation], selected_colors, res)
+        get_ans(ans,res)
+        WIN.flip()
+        core.wait(.8)
         save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,set_size = set_size)
-    run_feedback(rv)
-    WIN.flip()
-    core.wait(.8)
 
 
 def main():
