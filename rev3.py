@@ -30,6 +30,10 @@ class SquarePos:
 
 
 def save_ans(rt, ans, stoptime, res, situation,set_size):
+    #res= 1 之前出現過在別的地方，res = 0 之前沒出現過，res =2 跟之前一樣的顏色
+   
+    
+    #situation=0 先圓形後菱形， situation = 1 先菱形後圓形
     print(rt, ans, stoptime, res, situation,set_size)
     dataFile = open("%s.csv"%(INFO['ID']+'_'+INFO['age']), 'a')
     dataFile.write(INFO['ID']+','+INFO['age']+','+'\n')
