@@ -9,7 +9,7 @@ class SquarePos:
         self.color = color
         self.category = category #1 or 0
     def draw_cue(self):
-        cir = visual.Circle(WIN, radius = 40, edges = 40, lineWidth = 1)
+        cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 1)
         cir.setPos(self.position)
         cir.setFillColor('white')
         cir.draw()
@@ -22,7 +22,7 @@ class SquarePos:
     def draw_square(self, color=None):
         if color == None:
             color = self.color
-        squ = visual.Rect(WIN, size=[110, 110],lineColor = 'white')
+        squ = visual.Rect(WIN, size=[100, 100],lineColor = 'white')
         squ.setFillColor(color)
         squ.setPos(self.position)
         squ.draw()
@@ -31,10 +31,10 @@ class SquarePos:
 
 def save_ans(rt, ans, stoptime, res, situation,set_size):
     print(rt, ans, stoptime, res, situation,set_size)
-
-#    with open("%s_%s_%s.csv" % (INFO['ID'], INFO['gender'], INFO['age']),'a') as f:
-#        f.write("{}, {}, {}, {}, {}, {}".format(str(set_size) + "," + str(rt) + ","+ str(stoptime) + ","+ str(res) +","+ str(situation) +","+ str(ans)))[0]
-
+    dataFile = open("%s.csv"%(INFO['ID']+'_'+INFO['age']), 'a')
+    dataFile.write(INFO['ID']+','+INFO['age']+','+'\n')
+    #dataFile.write('rt, ans, stoptime, res, situation,set_size \n')
+    dataFile.write(str(rt) +', '+str(ans)+', '+ str(stoptime) +','+ str(res)+ ','+ str(situation) +','+str(set_size)+', ')
 
 def get_res(n):
     count = [0]*4
@@ -54,11 +54,9 @@ def get_setsize(n):
     count = [0]*4
     result = []
     for i in range(n):#n=160
-        rand = randint(0,3)
-        while count[rand] == n/4:
-            rand = randint(0,3)
-        count[rand] += 1
-        result.append(rand+1)
+        which_group = randint(0,3)
+        count[which_group] += 1
+        result.append(which_group+1)
     return result
 
 def get_cue():
@@ -111,13 +109,13 @@ WIN = visual.Window((800, 600), color="grey", units="pix")
 POSITIONS = [(100, 200), (100, -200), (-100, 200), (200, 100), (200, -100), (-200, 100), (-200, -100), (-100, -200)]
 COLORS = [ '#0000FF', '#800080', '#FFC0CB','#FFFF00', '#1E90FF', '#008000', '#A52A2A','#F83759','#FFA500', '#C45366', '#7853C4', '#CFB46F', '#6FCF80']
 STOPTIME_LIST = [ sample([0.3, 2],2) for x in range(120)]
-RES_LIST = get_res(160)
+RES_LIST = get_res(320)
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
 FIX = visual.TextStim(WIN, text='+', height=80, color='white', pos=(0, 0))
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
-INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female']}
+INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female'],'Practice':['Yes','No']}
 gui.DlgFromDict(dictionary=INFO, title='VWM Task', order=['ID', 'age'])
 
 def trial(stoptime, set_size, res):
@@ -149,7 +147,7 @@ def main():
     ALERT_MSG.draw()
     WIN.flip()
     event.waitKeys(keyList=['space'])
-    rounds = 20
+    rounds =160
     setsize_list = get_setsize(rounds)
     for i in range(rounds):
         trial(STOPTIME_LIST[i], setsize_list[i], RES_LIST[i])
@@ -174,4 +172,5 @@ def practice():
     for i in range(rounds):
         trial(STOPTIME_LIST[i], setsize_list[i], RES_LIST[i])
 
-practice()
+main()
+#practice()
