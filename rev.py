@@ -22,7 +22,7 @@ class SquarePos:
     def draw_square(self, color=None):
         if color == None:
             color = self.color
-        squ = visual.Rect(WIN, size=[100, 100],lineColor = 'white')
+        squ = visual.Rect(WIN, size=[100, 100],lineColor = color)
         squ.setFillColor(color)
         squ.setPos(self.position)
         squ.draw()
@@ -94,7 +94,6 @@ def run_stage2(cue_list, selected_colors, res):
         display_color = target_cue.color
     else:
         display_color = sample(selected_colors, 1)[0]
-    target_cue.draw_cue()
     target_cue.draw_square(display_color)
     WIN.flip()
     t1 = core.getTime()
@@ -108,15 +107,22 @@ CASES = [0,1]
 WIN = visual.Window((800, 600), color="grey", units="pix")
 POSITIONS = [(100, 200), (100, -200), (-100, 200), (200, 100), (200, -100), (-200, 100), (-200, -100), (-100, -200)]
 COLORS = [ '#0000FF', '#800080', '#FFC0CB','#FFFF00', '#1E90FF', '#008000', '#A52A2A','#F83759','#FFA500', '#C45366', '#7853C4', '#CFB46F', '#6FCF80']
-STOPTIME_LIST = [ sample([0.3, 2],2) for x in range(120)]
+STOPTIME_LIST = [ sample([0.3, 2],2) for x in range(320)]
 RES_LIST = get_res(320)
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
+FEEDBACK_O = visual.TextStim(WIN, pos=(0, 4), height=30,
+                            text='Correct.', color = 'white')
+FEEDBACK_X = visual.TextStim(WIN, pos=(0, 4), height=30,
+                            text='Wrong', color = 'white')
 FIX = visual.TextStim(WIN, text='+', height=80, color='white', pos=(0, 0))
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
 INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female'],'Practice':['Yes','No']}
 gui.DlgFromDict(dictionary=INFO, title='VWM Task', order=['ID', 'age'])
+
+
+
 
 def trial(stoptime, set_size, res):
     cue_category=[[],[]]
@@ -136,18 +142,33 @@ def trial(stoptime, set_size, res):
 
     run_stage1(squares_pos)
     WIN.flip()
+    
     for i, situation in enumerate(sample(CASES, 2)):
         run_cue(cue_category[situation], stoptime[i])
         WIN.flip()
         (ans, rt) = run_stage2(cue_category[situation], selected_colors, res)
-        save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,set_size = set_size)
+    feedback = []
+    for aws,resp in ans,res:
+        if ans == ['s'] and res == 2:
+            feedback.append(1)
+        elif ans ==['k'] and res !=1:
+            feedback.append(1)
+        else:
+            feedback.append(0)
+    if value(feedback) = 1:
+            FEEDBACK_O.draw()
+    elif value(feedback) = 0:
+            FEEDBACK_X.draw()
+    WIN.flip()
+    core.wait(.8)
+    save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,set_size = set_size,feedback)
 
 
 def main():
     ALERT_MSG.draw()
     WIN.flip()
     event.waitKeys(keyList=['space'])
-    rounds =160
+    rounds =320
     setsize_list = get_setsize(rounds)
     for i in range(rounds):
         trial(STOPTIME_LIST[i], setsize_list[i], RES_LIST[i])
