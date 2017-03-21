@@ -68,13 +68,24 @@ def get_cue():
     return (A_cue, B_cue)
 def get_ans(ans,res):
     for aws,resp in enumerate(ans,res):
-        if ans == [u's'] and res == 2:
-            FEEDBACK_O.draw()
-        elif ans ==[u'k'] and res !=1:
-            FEEDBACK_O.draw()
-        else:
+        if ans == ['s'] and res == 2:
             FEEDBACK_X.draw()
-
+            #feedback = 1
+        elif ans ==['k'] and res ==1:
+            FEEDBACK_X.draw()
+            #feedback = 1
+        elif ans == ['s'] and res ==0:
+            FEEDBACK_X.draw()
+            #feedback= 0
+        elif ans == ['s'] and res ==1:
+            FEEDBACK_O.draw()
+            #feedback = 1
+        elif ans == ['K'] and res ==0:
+            FEEDBACK_O.draw()
+            #feedback= 0
+        elif ans == ['k'] and res ==2:
+            FEEDBACK_O.draw()
+            #FEEDBACK = 0
 
 
 def run_stage1(squares_pos):
