@@ -29,12 +29,12 @@ class SquarePos:
 
 
 
-def save_ans(rt, ans, stoptime, res, situation,set_size):
-    print(rt, ans, stoptime, res, situation,set_size)
+def save_ans(rt, ans, stoptime, res, situation,set_size):#,target_cue):
+    print(rt, ans, stoptime, res, situation,set_size,target_cue)
     dataFile = open("%s.csv"%(INFO['ID']+'_'+INFO['age']), 'a')
-    dataFile.write(INFO['ID']+','+INFO['age']+','+'\n')
+    dataFile.write(INFO['ID']+','+INFO['age']+','+INFO['Block']+','+ INFO['Practice'] +'\n')
     #dataFile.write('rt, ans, stoptime, res, situation,set_size \n')
-    dataFile.write(str(rt) +', '+str(ans)+', '+ str(stoptime) +','+ str(res)+ ','+ str(situation) +','+str(set_size)+', ')
+    dataFile.write(str(rt) +', '+str(ans)+', '+ str(stoptime) +','+ str(res)+ ','+ str(situation) +','+str(set_size)+',')#+str(target_cue)+',')
 
 def get_res(n):
     count = [0]*4
@@ -66,27 +66,28 @@ def get_cue():
     B_cue = list(set(squares_pos)-set(A_cue))
 
     return (A_cue, B_cue)
+
 def get_ans(ans,res):
     for aws,resp in enumerate(ans,res):
-        if ans == ['s'] and res == 2:
-            FEEDBACK_X.draw()
-            #feedback = 1
-        elif ans ==['k'] and res ==1:
-            FEEDBACK_X.draw()
-            #feedback = 1
-        elif ans == ['s'] and res ==0:
-            FEEDBACK_X.draw()
-            #feedback= 0
-        elif ans == ['s'] and res ==1:
-            FEEDBACK_O.draw()
-            #feedback = 1
-        elif ans == ['K'] and res ==0:
-            FEEDBACK_O.draw()
-            #feedback= 0
-        elif ans == ['k'] and res ==2:
-            FEEDBACK_O.draw()
-            #FEEDBACK = 0
-
+            for aws,resp in enumerate(ans,res):
+                if ans == ['s'] and res ==1:
+                    FEEDBACK_O.draw()
+                elif ans ==['k'] and res !=1:
+                    FEEDBACK_O.draw()
+                else:
+                    FEEDBACK_X.draw()
+#        if ans == ['s'] and res == 2:
+#            FEEDBACK_X.draw()
+#        elif ans ==['k'] and res ==1:
+#            FEEDBACK_X.draw()
+#        elif ans == ['s'] and res ==0:
+#            FEEDBACK_X.draw()
+#        elif ans == ['s'] and res ==1:
+#            FEEDBACK_O.draw()
+#        elif ans == ['K'] and res ==0:
+#            FEEDBACK_O.draw()
+#        elif ans == ['k'] and res ==2:
+#            FEEDBACK_O.draw()
 
 def run_stage1(squares_pos):
     FIX.draw()
@@ -121,27 +122,27 @@ def run_stage2(cue_list, selected_colors, res):
     ans = event.waitKeys(keyList=['k', 's'])
     t2 = core.getTime()
     WIN.flip()
+#    print(target_cue)
 
-    return (ans, t2-t1)
+    return (ans, t2-t1,target_cue)
 
 CASES = [0,1]
 WIN = visual.Window((800, 600), color="grey", units="pix")
 POSITIONS = [(100, 200), (100, -200), (-100, 200), (200, 100), (200, -100), (-200, 100), (-200, -100), (-100, -200)]
-COLORS = [ '#0000FF', '#800080', '#FFC0CB','#FFFF00', '#1E90FF', '#008000', '#A52A2A','#F83759','#FFA500', '#C45366', '#7853C4', '#CFB46F', '#6FCF80']
+COLORS = [ '#CCFF00', '#FFFF99', '#FFCC00','#808000', '#50C878', '#6640FF', '#000080','#DE3163','#5000B8', '#FF00FF', '#E0FFFF', '#FFA500', '#FF0000','#4169E1']
 STOPTIME_LIST = [ sample([0.3, 2],2) for x in range(320)]
-RES_LIST = get_res(320)
+RES_LIST = get_res(80)
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
 FEEDBACK_O = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Correct.', color = 'white')
 FEEDBACK_X = visual.TextStim(WIN, pos=(0, 4), height=30,
-                            text='Wrong', color = 'white')
+                            text='Wrong.', color = 'white')
 FIX = visual.TextStim(WIN, text='+', height=80, color='white', pos=(0, 0))
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
-INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female'],'Practice':['Yes','No']}
+INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female'],'Practice':['Yes','No'],'Block':['1','2','3','4']}
 gui.DlgFromDict(dictionary=INFO, title='VWM Task', order=['ID', 'age'])
-
 
 
 def trial(stoptime, set_size, res):
@@ -167,17 +168,17 @@ def trial(stoptime, set_size, res):
         run_cue(cue_category[situation], stoptime[i])
         WIN.flip()
         (ans, rt) = run_stage2(cue_category[situation], selected_colors, res)
-        get_ans(ans,res)
-        WIN.flip()
-        core.wait(.8)
         save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,set_size = set_size)
+    get_ans(ans,res)
+    WIN.flip()
+    core.wait(.5)
 
 
 def main():
     ALERT_MSG.draw()
     WIN.flip()
     event.waitKeys(keyList=['space'])
-    rounds =320
+    rounds =40
     setsize_list = get_setsize(rounds)
     for i in range(rounds):
         trial(STOPTIME_LIST[i], setsize_list[i], RES_LIST[i])
