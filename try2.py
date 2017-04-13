@@ -1,7 +1,7 @@
 from random import sample, shuffle, randint
 from psychopy import core, event, gui, visual, data, info
 import sys, time, random
-
+import itertools
 
 class SquarePos:
     def __init__(self, position, color, category):
@@ -154,6 +154,7 @@ def run_stage2(cue_list, selected_colors, res):
     WIN.flip()
     t1 = core.getTime()
     ans = event.waitKeys(keyList=['k', 's'])
+    itertools.chain.from_iterable(ans) 
     t2 = core.getTime()
     WIN.flip()
 
