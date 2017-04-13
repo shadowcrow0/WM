@@ -33,10 +33,10 @@ class SquarePos:
         squ.setPos(self.position)
         squ.draw()
 #make new def for reverse
-	def set_cue(self, newpos,category):
-		if self.category == 0:
-			cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 1)
-            cir.setPos(self.newpos)
+    def set_cue(self, newpos,category):
+        if self.category == 0:
+            cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 1)
+            cir.setPos(newpos)
             cir.setFillColor('white')
             cir.draw()
         elif self.category == 1:
@@ -44,11 +44,11 @@ class SquarePos:
             dim.setPos(self.newpos)
             dim.setFillColor('white')
             dim.draw()
-def show_res(self,newpos,selected_colors):
-   	squ = visual.Rect(WIN, size=[100, 100],lineColor = 'white')
-    squ.setPos([0,0])
-    squ.setFillColor(selected_colors)
-    squ.draw()
+    def show_res(self,newpos,selected_colors):
+        squ = visual.Rect(WIN, size=[100, 100],lineColor = 'white')
+        squ.setPos([0,0])
+        squ.setFillColor(selected_colors)
+        squ.draw()
 #copy the function from old
 #append ans to record[]
 def save_ans(rt, ans, stoptime, res, situation,set_size,FEEDBACK):
