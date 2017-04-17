@@ -11,14 +11,12 @@ class SquarePos:
         self.category = category #1 or 0
     def draw_cue(self):
         if self.category == 0:
-            cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 4)
+            cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 3)
             cir.setPos(self.position)
-            #cir.setFillColor('white')
             cir.draw()
         elif self.category == 1:
-            dim = visual.Rect(WIN, size=(150,150), ori =45, lineWidth =4)
+            dim = visual.Rect(WIN, size=(170,170), ori =45, lineWidth =3 )
             dim.setPos(self.position)
-            #dim.setFillColor('white')
             dim.draw()
 
     def draw_square(self, color=None):
@@ -30,14 +28,12 @@ class SquarePos:
         squ.draw()
     def determine_cue(self):
         if self.category == 0:
-            cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 4)
+            cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 3)
             cir.setPos([0,0])
-#            cir.setFillColor('white')
             cir.draw()
         elif self.category == 1:
-            dim = visual.Rect(WIN, size=(150,150), ori =45, lineWidth =4)
+            dim = visual.Rect(WIN, size=(170,170), ori =45, lineWidth =3 )
             dim.setPos([0,0])
- #           dim.setFillColor('white')
             dim.draw()
     def draw_res(self,display_color):
         squ = visual.Rect(WIN, size=[100, 100],lineColor =None)
@@ -46,14 +42,28 @@ class SquarePos:
         squ.draw()
 
 
-
-
-def save_ans(rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK):
+def save_ans(rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK,n):
+    #print(rt, ans, stoptime, res, situation,SET_SIZE)
+    RECORD.append(rt)
+    RECORD.append(ans)
+    RECORD.append(stoptime)
+    RECORD.append(res)
+    RECORD.append(situation)
+    RECORD.append(SET_SIZE)
+    RECORD.append(FEEDBACK)
+    RECORD.append(n)
     dataFile = open("%s.csv"%(INFO['ID']+'_'+INFO['age']), 'a')
-    dataFile.write(str(rt) +', '+str(ans)+', '+ str(stoptime) +','+ str(res)+ ','+ str(situation) +','+str(SET_SIZE)+','+str(FEEDBACK)+'\n')
+    dataFile.write(str(RECORD)+'\n')
 
 
 
+#str everything
+#csv writer
+#def save_file(RECORD):
+#
+#     dataFile.write(INFO['ID']+','+INFO['age']+'\n')
+#     #kdataFile.write(str(rt)+'\n')
+#     dataFile.write(str(RECORD)+'\n')
 
 def get_res(n):
     count = [0]*4
@@ -103,9 +113,9 @@ def run_stage2(cue_list, selected_colors, res,cat_col,color_new):
     color_postive = cat_col[category]
     negative = 0 if category == 1 else 1 #inline if
     color_intrusion =cat_col[negative]
-    if res == 0:
+    if res == 0: #new
         display_color = sample(color_postive,1)[0]
-    elif res == 1: 
+    elif res == 1: #positive
         display_color = sample(color_new,1)[0]
     elif res ==2:
         display_color = sample(color_intrusion, 1)[0]
@@ -115,14 +125,9 @@ def run_stage2(cue_list, selected_colors, res,cat_col,color_new):
     t1 = core.getTime()
     ans = event.waitKeys(keyList=['k', 's'])
     t2 = core.getTime()
-    get_ans(ans, res)
-    WIN.flip()
-    core.wait(1)
     return (ans, t2-t1)
 
-
 def get_ans(ans,res):
-    FEEDBACK =[]
     if res ==0 and ans == ['s']:
         FEEDBACK_O.draw()
         FEEDBACK.append(1)
@@ -142,7 +147,6 @@ def get_ans(ans,res):
         FEEDBACK_X.draw() 
         FEEDBACK.append(0)
     return FEEDBACK
-
 INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female']}
 gui.DlgFromDict(dictionary=INFO, title='VWM Task', order=['ID', 'age'])
 CASES = [0,1]
@@ -159,18 +163,18 @@ ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
 FEEDBACK_O = visual.TextStim(WIN, pos=(0, 4), height=30,text='Correct.', color = 'white')
 FEEDBACK_X = visual.TextStim(WIN, pos=(0, 4), height=30,text='Wrong.', color = 'white')
 SET_SIZE = 0
-FEEDBACK =[]
+FEEDBACK = []
+RECORD = []
 
 
 def trial(stoptime, res):
-
     cue_category=[[],[]]
     selected_colors = sample(COLORS, SET_SIZE*2)
     color_new = list(set(COLORS)- set(selected_colors))
     squares_pos = []
     cat_col = [[],[]]
+    
     '''init'''
-
     for i, pos in enumerate(sample(POSITIONS, SET_SIZE*2)):
         color = selected_colors[i]
         category = randint(0,1)
@@ -187,7 +191,10 @@ def trial(stoptime, res):
         WIN.flip()
         (ans, rt) = run_stage2(cue_category[situation], selected_colors, res,cat_col,color_new)
         WIN.flip()
-    save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,SET_SIZE = SET_SIZE, FEEDBACK= FEEDBACK)
+        get_ans(ans,res)
+        WIN.flip()
+        core.wait(1.5)
+    save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,SET_SIZE = SET_SIZE, FEEDBACK= FEEDBACK, n =i)
 
 
 
@@ -196,12 +203,11 @@ def main():
     ALERT_MSG.draw()
     WIN.flip()
     event.waitKeys(keyList=['space'])
-    rounds = 1
+    rounds = 4
     setsize_list = get_setsize(rounds)
     print(setsize_list)
     print(RES_LIST)
     for i in range(rounds):
         SET_SIZE= setsize_list[i]
         trial(STOPTIME_LIST[i], RES_LIST[i])
-
 main()
