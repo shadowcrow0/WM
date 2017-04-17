@@ -159,7 +159,7 @@ FEEDBACK_O = visual.TextStim(WIN, pos=(0, 4), height=30,text='Correct.', color =
 FEEDBACK_X = visual.TextStim(WIN, pos=(0, 4), height=30,text='Wrong.', color = 'white')
 SET_SIZE = 0
 FEEDBACK = []
-RECORD = []
+
 
 
 def trial(stoptime, res):
