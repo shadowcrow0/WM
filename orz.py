@@ -42,28 +42,18 @@ class SquarePos:
         squ.draw()
 
 
-def save_ans(rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK,n):
-    #print(rt, ans, stoptime, res, situation,SET_SIZE)
-    RECORD.append(rt)
-    RECORD.append(ans)
-    RECORD.append(stoptime)
-    RECORD.append(res)
-    RECORD.append(situation)
-    RECORD.append(SET_SIZE)
-    RECORD.append(FEEDBACK)
-    RECORD.append(n)
+def save_ans(rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK):
     dataFile = open("%s.csv"%(INFO['ID']+'_'+INFO['age']), 'a')
-    dataFile.write(str(RECORD)+'\n')
-
-
-
-#str everything
-#csv writer
-#def save_file(RECORD):
-#
-#     dataFile.write(INFO['ID']+','+INFO['age']+'\n')
-#     #kdataFile.write(str(rt)+'\n')
-#     dataFile.write(str(RECORD)+'\n')
+    #dataFile.write('rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK\n')
+    rt= str(rt)
+    ans = str(ans)
+    stoptime = str(stoptime)
+    res = str(res)
+    situation = str(situation)
+    SET_SIZE = str(SET_SIZE)
+    FEEDBACK = str(FEEDBACK)
+    print(FEEDBACK)
+    dataFile.write(rt+','+ans+','+stoptime+','+res+','+situation+','+SET_SIZE+','+FEEDBACK+'\n')
 
 def get_res(n):
     count = [0]*4
@@ -147,6 +137,7 @@ def get_ans(ans,res):
         FEEDBACK_X.draw() 
         FEEDBACK.append(0)
     return FEEDBACK
+
 INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female']}
 gui.DlgFromDict(dictionary=INFO, title='VWM Task', order=['ID', 'age'])
 CASES = [0,1]
@@ -194,7 +185,9 @@ def trial(stoptime, res):
         get_ans(ans,res)
         WIN.flip()
         core.wait(1.5)
-    save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,SET_SIZE = SET_SIZE, FEEDBACK= FEEDBACK, n =i)
+        save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,SET_SIZE = SET_SIZE, FEEDBACK= FEEDBACK)
+        FEEDBACK.pop()
+
 
 
 
