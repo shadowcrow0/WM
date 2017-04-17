@@ -11,12 +11,12 @@ class SquarePos:
         self.category = category #1 or 0
     def draw_cue(self):
         if self.category == 0:
-            cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 10)
+            cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 4)
             cir.setPos(self.position)
             #cir.setFillColor('white')
             cir.draw()
         elif self.category == 1:
-            dim = visual.Rect(WIN, size=(150,150), ori =45, lineWidth =10 )
+            dim = visual.Rect(WIN, size=(150,150), ori =45, lineWidth =4)
             dim.setPos(self.position)
             #dim.setFillColor('white')
             dim.draw()
@@ -30,12 +30,12 @@ class SquarePos:
         squ.draw()
     def determine_cue(self):
         if self.category == 0:
-            cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 10)
+            cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 4)
             cir.setPos([0,0])
 #            cir.setFillColor('white')
             cir.draw()
         elif self.category == 1:
-            dim = visual.Rect(WIN, size=(150,150), ori =45, lineWidth =10 )
+            dim = visual.Rect(WIN, size=(150,150), ori =45, lineWidth =4)
             dim.setPos([0,0])
  #           dim.setFillColor('white')
             dim.draw()
