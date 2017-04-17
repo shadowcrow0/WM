@@ -122,24 +122,25 @@ def run_stage2(cue_list, selected_colors, res,cat_col,color_new):
 
 
 def get_ans(ans,res):
+    FEEDBACK =[]
     if res ==0 and ans == ['s']:
         FEEDBACK_O.draw()
-        FEEDBACK=1
+        FEEDBACK.append(1)
     elif res ==1 and ans ==['k']:
         FEEDBACK_O.draw()
-        FEEDBACK=1
+        FEEDBACK.append(1)
     elif res ==2 and ans ==['k']:
         FEEDBACK_O.draw()
-        FEEDBACK=1
+        FEEDBACK.append(1)
     elif res ==0 and ans ==['k']:
         FEEDBACK_X.draw()
-        FEEDBACK=0
+        FEEDBACK.append(0)
     elif res ==1 and ans ==['s']:
         FEEDBACK_X.draw()
-        FEEDBACK=0
+        FEEDBACK.append(0)
     elif res ==2 and ans ==['s']:
         FEEDBACK_X.draw() 
-        FEEDBACK=0
+        FEEDBACK.append(0)
     return FEEDBACK
 
 INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female']}
@@ -158,8 +159,7 @@ ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
 FEEDBACK_O = visual.TextStim(WIN, pos=(0, 4), height=30,text='Correct.', color = 'white')
 FEEDBACK_X = visual.TextStim(WIN, pos=(0, 4), height=30,text='Wrong.', color = 'white')
 SET_SIZE = 0
-FEEDBACK = 0
-
+FEEDBACK =[]
 
 
 def trial(stoptime, res):
@@ -169,7 +169,6 @@ def trial(stoptime, res):
     color_new = list(set(COLORS)- set(selected_colors))
     squares_pos = []
     cat_col = [[],[]]
-    
     '''init'''
 
     for i, pos in enumerate(sample(POSITIONS, SET_SIZE*2)):
@@ -188,7 +187,7 @@ def trial(stoptime, res):
         WIN.flip()
         (ans, rt) = run_stage2(cue_category[situation], selected_colors, res,cat_col,color_new)
         WIN.flip()
-        save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,SET_SIZE = SET_SIZE, FEEDBACK= FEEDBACK)
+    save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,SET_SIZE = SET_SIZE, FEEDBACK= FEEDBACK)
 
 
 
@@ -197,7 +196,7 @@ def main():
     ALERT_MSG.draw()
     WIN.flip()
     event.waitKeys(keyList=['space'])
-    rounds = 4
+    rounds = 1
     setsize_list = get_setsize(rounds)
     print(setsize_list)
     print(RES_LIST)
