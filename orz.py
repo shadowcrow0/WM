@@ -124,22 +124,22 @@ def run_stage2(cue_list, selected_colors, res,cat_col,color_new):
 def get_ans(ans,res):
     if res ==0 and ans == ['s']:
         FEEDBACK_O.draw()
-        FEEDBACK.append(1)
+        FEEDBACK=1
     elif res ==1 and ans ==['k']:
         FEEDBACK_O.draw()
-        FEEDBACK.append(1)
+        FEEDBACK=1
     elif res ==2 and ans ==['k']:
         FEEDBACK_O.draw()
-        FEEDBACK.append(1)
+        FEEDBACK=1
     elif res ==0 and ans ==['k']:
         FEEDBACK_X.draw()
-        FEEDBACK.append(0)
+        FEEDBACK=0
     elif res ==1 and ans ==['s']:
         FEEDBACK_X.draw()
-        FEEDBACK.append(0)
+        FEEDBACK=0
     elif res ==2 and ans ==['s']:
         FEEDBACK_X.draw() 
-        FEEDBACK.append(0)
+        FEEDBACK=0
     return FEEDBACK
 
 INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female']}
@@ -158,7 +158,7 @@ ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
 FEEDBACK_O = visual.TextStim(WIN, pos=(0, 4), height=30,text='Correct.', color = 'white')
 FEEDBACK_X = visual.TextStim(WIN, pos=(0, 4), height=30,text='Wrong.', color = 'white')
 SET_SIZE = 0
-FEEDBACK = []
+FEEDBACK = 0
 
 
 
