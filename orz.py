@@ -11,7 +11,7 @@ class SquarePos:
         self.category = category #1 or 0
     def draw_cue(self):
         if self.category == 0:
-            cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 3)
+            cir = visual.Circle(WIN, radius = 50, edges = 40, lineWidth = 3)
             cir.setPos(self.position)
             cir.draw()
         elif self.category == 1:
@@ -28,7 +28,7 @@ class SquarePos:
         squ.draw()
     def determine_cue(self):
         if self.category == 0:
-            cir = visual.Circle(WIN, radius = 40, edges = 35, lineWidth = 3)
+            cir = visual.Circle(WIN, radius = 50, edges = 40, lineWidth = 3)
             cir.setPos([0,0])
             cir.draw()
         elif self.category == 1:
@@ -52,6 +52,9 @@ def save_ans(rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK):
     situation = str(situation)
     SET_SIZE = str(SET_SIZE)
     FEEDBACK = str(FEEDBACK)
+#    color_new=str(color_new)
+#    cat_col=str(cat_col)
+#','+color_new+','+cat_col+selected_pos+
     print(FEEDBACK)
     dataFile.write(rt+','+ans+','+stoptime+','+res+','+situation+','+SET_SIZE+','+FEEDBACK+'\n')
 
@@ -109,7 +112,6 @@ def run_stage2(cue_list, selected_colors, res,cat_col,color_new):
         display_color = sample(color_new,1)[0]
     elif res ==2:
         display_color = sample(color_intrusion, 1)[0]
-    target_cue.determine_cue()
     target_cue.draw_res(display_color)
     WIN.flip()
     t1 = core.getTime()
@@ -143,30 +145,31 @@ gui.DlgFromDict(dictionary=INFO, title='VWM Task', order=['ID', 'age'])
 CASES = [0,1]
 WIN = visual.Window((1366, 800), color="grey", units="pix",fullscr = True)
 POSITIONS = [(100, 200), (100, -200), (-100, 200), (200, 100), (200, -100), (-200, 100), (-200, -100), (-100, -200)]
-COLORS = [ '#0000FF', '#800080', '#FFC0CB','#FFFF00', '#1E90FF', '#008000', '#A52A2A','#F83759','#FFA500', '#C45366', '#7853C4', '#CFB46F', '#6FCF80']
-STOPTIME_LIST = [ sample([0.3, 2],2) for x in range(160)]
-RES_LIST = get_res(8)
-ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
+COLORS = ['#50C878','#1E90FF','#000080','#FF0000','#8B008B','#6699cc','#006374','#4D3900', '#7853C4', '#8B0000','#FF00FF', '#CFB46F']
+# '#0000FF', '#800080', '#FFC0CB','#FFFF00', '', '#008000', ','#F83759','#FFA500', '#C45366', ', '#CFB46F', '#6FCF80']
+STOPTIME_LIST = [ sample([0.3, 2],2) for x in range(960)]
+RES_LIST = get_res(960)
+ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=40,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
-FIX = visual.TextStim(WIN, text='+', height=80, color='white', pos=(0, 0))
-ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=30,
-                            text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
+FIX = visual.TextStim(WIN, text='+', height=120, color='white', pos=(0, 0))
 FEEDBACK_O = visual.TextStim(WIN, pos=(0, 4), height=30,text='Correct.', color = 'white')
 FEEDBACK_X = visual.TextStim(WIN, pos=(0, 4), height=30,text='Wrong.', color = 'white')
 SET_SIZE = 0
 FEEDBACK = []
 RECORD = []
-
+REST_MSG = visual.TextStim(WIN, pos=(0, 4), height=50,
+                            text='Just finished block, please take a rest,\nPress "Space" to continue.', color = 'white')
 
 def trial(stoptime, res):
     cue_category=[[],[]]
     selected_colors = sample(COLORS, SET_SIZE*2)
+    selected_pos =sample(POSITIONS, SET_SIZE*2)
     color_new = list(set(COLORS)- set(selected_colors))
     squares_pos = []
     cat_col = [[],[]]
     
     '''init'''
-    for i, pos in enumerate(sample(POSITIONS, SET_SIZE*2)):
+    for i, pos in enumerate(selected_pos):
         color = selected_colors[i]
         category = randint(0,1)
         if len(cue_category[category]) == SET_SIZE: #A full or B full
@@ -188,7 +191,7 @@ def trial(stoptime, res):
         save_ans(rt=rt, ans=ans, stoptime=stoptime[i], res=res, situation=situation,SET_SIZE = SET_SIZE, FEEDBACK= FEEDBACK)
         FEEDBACK.pop()
 
-
+#,color_new=color_new,cat_col=cat_col,selected_pos =selected_pos
 
 
 def main():
@@ -196,11 +199,12 @@ def main():
     ALERT_MSG.draw()
     WIN.flip()
     event.waitKeys(keyList=['space'])
-    rounds = 4
+    rounds = 40
     setsize_list = get_setsize(rounds)
     print(setsize_list)
     print(RES_LIST)
     for i in range(rounds):
         SET_SIZE= setsize_list[i]
         trial(STOPTIME_LIST[i], RES_LIST[i])
+
 main()
