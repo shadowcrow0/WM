@@ -35,7 +35,7 @@ class SquarePos:
             dim = visual.Rect(WIN, size=(170,170), ori =45, lineWidth =3 )
             dim.setPos([0,0])
             dim.draw()
-    def draw_res(self,display_color):
+    def draw_res(self,display_color=None):
         squ = visual.Rect(WIN, size=[100, 100],lineColor =None)
         squ.setFillColor(display_color)
         squ.setPos([0,0])
@@ -59,18 +59,8 @@ def save_ans(rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK):
     dataFile.write(rt+','+ans+','+stoptime+','+res+','+situation+','+SET_SIZE+','+FEEDBACK+'\n')
 
 def get_res(n):
-    count = [0]*4
-    result = []
-    for i in range(n):#n=160
-        rand = randint(0,3)
-        while count[rand] == n/4:
-            rand = randint(0,3)
-        count[rand] += 1
-        result.append(rand)
     for i in range(n):
-        if result[i] == 3:
-            result[i] = 0
-    return result
+        res=sample([2,1,0,0],4)
 
 def get_setsize(n):
     result =[]
@@ -99,19 +89,19 @@ def run_cue(cue_list, stoptime):
     WIN.flip()
     core.wait(stoptime)
 
-
-def run_stage2(cue_list, selected_colors, res,cat_col,color_new):
+def run_stage2(cue_list, selected_colors,res,cat_col,color_new):
     target_cue = sample(cue_list, 1)[0]
     category= target_cue.category #targetcue's attribute
-    color_postive = cat_col[category]
-    negative = 0 if category == 1 else 1 #inline if
-    color_intrusion =cat_col[negative]
-    if res == 0: #new
-        display_color = sample(color_postive,1)[0]
-    elif res == 1: #positive
-        display_color = sample(color_new,1)[0]
-    elif res ==2:
-        display_color = sample(color_intrusion, 1)[0]
+    for res in RES_LIST:
+        color_postive = cat_col[category]
+        negative = 0 if category == 1 else 1 #inline if
+        color_intrusion =cat_col[negative]
+        if res == 0: #new
+            display_color = sample(color_postive,1)[0]
+        elif res == 1: #positive
+            display_color = sample(color_new,1)[0]
+        elif res ==2:
+            display_color = sample(color_intrusion, 1)[0]
     target_cue.draw_res(display_color)
     WIN.flip()
     t1 = core.getTime()
@@ -149,7 +139,7 @@ COLORS = ['#ffff00','#002140','#ff9900','#ff0000','#ccff33','#cc9900','#324300',
 #50C878','#1E90FF','#000080','#FF0000','#8B008B','#6699cc','#006374','#4D3900', '#7853C4', '#8B0000','#FF00FF', '#CFB46F']
 # '#0000FF', '#800080', '#FFC0CB','#FFFF00', '', '#008000', ','#F83759','#FFA500', '#C45366', ', '#CFB46F', '#6FCF80']
 STOPTIME_LIST = [ sample([0.3, 2],2) for x in range(480)]
-RES_LIST = get_res(480)
+RES_LIST = [ sample([0,0,1,2],1) for x in range(480)]
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=40,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.', color = 'white')
 FIX = visual.TextStim(WIN, text='+', height=120, color='white', pos=(0, 0))
