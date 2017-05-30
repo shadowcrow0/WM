@@ -45,7 +45,11 @@ random assign positions to circle and diamond.
   
   2.1 Probe Type:0(positive), 1(new), 2(intrusion)
   
-     half probes are assigned to positive, quater probes for intrusion, quater for new, in order to countanbanlancing false alarm rate.
+  
+   half probes are assigned to positive, quater probes for intrusion, quater for new, 
+   
+   
+   in order to countanbanlancing false alarm rate.
       
   2.2.CSI(cue-stimuli interval):0.3/2.0s/5s
   
