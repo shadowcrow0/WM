@@ -1,6 +1,5 @@
 from psychopy import visual, core, gui, event, data
 from psychopy.tools.filetools import fromFile, toFile
-from itertools import chain
 from random import sample
 from itertools import product, chain,  islice
 import csv
@@ -36,17 +35,7 @@ p5 = (200, -100)
 p6 = (100, -200)
 p7 = (-200, -100)
 p8 = (-100, -200)
-c1 = (0, 230, 115)
-c2 = (255, 128, 0)
-c3 = (128, 0, 128)
-c4 = (0, 100, 0)
-c5 = (139, 69, 19)
-c6 = (255, 182, 193)
-c7 = (222, 184, 135)
-c8 = (255, 140, 0)
-c9 = (0, 102, 102)
-c10 = (107, 142, 35)
-c11 = (0, 128, 128)
+
 
 
 phase = visual.TextStim(
@@ -82,34 +71,6 @@ cat2 = []
 FEEDBACK = []
 
 
-#datafile = open("vwm.csv", "rb")
-#reader = csv.reader(datafile, delimiter=",")
-# for row in reader:
-#    sz.append(float(row[0]))
-#    ProbeType.append(float(row[1]))
-#    CSI2.append(float(row[2]))
-#    ProbeType2.append(float(row[3]))
-#    CSI.append(float(row[4]))
-#    cue.append(float(row[5]))
-#    thisIndex.append(int(row[7]))
-#    cat1.append(row[14])
-#    cat2.append(row[15])
-# datafile.close()
-#c = (c1,c2,c3,c4,c5,c6)
-#a =(c7,c8,c9,c10,c11)
-#ups= (p1,p2,p3,p4)
-#downs = (p5, p6, p7,p8)
-# for i in sz:
-#    ups =sample(ups,i)
-#    downs = sample(downs,i)
-#    pos = list(chain.from_iterable(ups,downs))
-#    col_a = sample(c,i)
-#    col_b = sample(a,i)
-#    color = list(chain.from_iterable(col_a,col_b))
-
-
-# save file and stimulation
-# def save_ans(rt, ans, stoptime, res, category, setsize, FEEDBACK, display_color, col_positive, cols_intrusion, pos_squ, pos_cir, positions,rounds):
 #    dataFile = open("%s.csv"%(INFO['ID']+'_'+INFO['age']+'_'+INFO['block']), 'a')
 #    #dataFile.write('rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK\n')
 #    rt = str(rt)
@@ -127,10 +88,6 @@ FEEDBACK = []
 #    positions = str(positions)
 #    rounds = str(rounds)
 #    dataFile.write(rt+','+ ans+','+stoptime+','+res+','+ category+','+ setsize+','+ FEEDBACK+','+ display_color+','+col_positive+','+ cols_intrusion +','+ pos_squ+','+ pos_cir+','+ positions +','+ rounds+'\n')
-######end of handling data ###########
-# basic component
-# determine which position circle and diamond belong,
-# if cue = 0 menas circle up, diamond down
 
 col_a = [(0, 102, 102), (0, 230, 115)]
 color = [(107, 142, 35), (0, 230, 115), (0, 102, 102), (222, 184, 135)]
@@ -159,7 +116,7 @@ def square(color, pos):
         squares.append(squ)
     # 8. draw squares with color.
     for idx, squ in enumerate(squares):
-        squ.setFillColor(color[idx])
+        squ.setFillColor(color[idx],'rgb255')
         squ.setPos(pos[idx])
         squ.draw()
 
@@ -347,38 +304,3 @@ def process(downs, ups, color, cue, CSI, ProbeType, ProbeType2, CSI2, col_a, col
     FEEDBACK.pop()
     print thisIndex
 
-
-process(downs, ups, color, cue, CSI, ProbeType, ProbeType2,
-        CSI2, col_a, col_b, pos, cat1, cat2, thisIndex)
-# def main():
-#    global sz,downs, ups, color, cue, CSI, ProbeType, ProbeType2, CSI2,col_a, col_b, pos ,thisIndex
-#    ## Experiment Section, use experiment variables here
-#    print(color)
-#    rounds =80
-#    for i in range(rounds):
-# Experiment Section, use experiment variables here
-#    #    print('Trial {}. Click at [{:4f}]. RT : {:3f} sec. '
-#    #          'Error: {:3f}. Status: {}. Color: {}.'.format(
-#    #              countTrial+1, myMouse.getPos()[0], myMouse.mouseMoveTime(),
-#    #              error(), status, arrowAns.fillColor))  # for debug
-#        process(sz = sz[i],ProbeType = ProbeType[i],CSI = CSI[i] ,ProbeType2 = ProbeType2[i], CSI2 = CSI2[i],cue = cue[i],color = color[i],col_a = col_a[i], col_b = col_b[i],pos = pos[i], ups = ups[i],downs = downs[i],thisIndex = thisIndex[i])
-#        print("color = {}, col_a = {}, col_b = {}, pos = {}, ups ={}, downs ={}".format(color[i], col_a[i], col_b[i], pos[i], ups[i], downs[i]))
-#        print("sz = {} , ProbeType = {}, CSI = {}, ProbeType2 ={}, CSI2 ={}, cue = {}, thisIndex={}".format(sz[i],ProbeType[i], CSI[i], ProbeType2[i],CSI2[i],cue[i],thisIndex[i]))
-#        trials.addData('sz', sz[i])  # as countTrial is counting from 0, there should be a "+1"
-#        trials.addData('ProbeType', ProbeType[i])
-#        trials.addData('CSI', CSI[i])
-#        trials.addData('ProbeType2', ProbeType2[i])
-#        trials.addData('CSI2', CSI2[i])  # hit/ miss
-#        trials.addData('cue', cue[i])  # see the error function above
-#        trials.addData('rt1', rt1)
-#        trials.addData('cat1', cat1[i])
-#        trials.addData('cat2',cat2[i])
-#        trials.addData('col_a',col_a[i])
-#        trials.addData('col_b',col_b[i])
-#        trials.addData('color',color[i])
-#        trials.addData('pos',pos[i])
-#        trials.addData('ups',ups[i])
-#        trials.addData('downs',downs[i])
-#        trials.addData('rt2',rt2)
-#        print("color = {}, col_a = {}, col_b = {}, pos = {}, ups ={}, downs ={}".format(color[i], col_a[i], col_b[i], pos[i], ups[i], downs[i]))
-#        print("sz = {} , ProbeType = {}, CSI = {}, ProbeType2 ={}, CSI2 ={}, cue = {}, thisIndex={}".format(sz[i],ProbeType[i], CSI[i], ProbeType2[i],CSI2[i],cue[i],thisIndex[i]))
