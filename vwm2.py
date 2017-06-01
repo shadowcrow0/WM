@@ -1,6 +1,5 @@
 from psychopy import visual, core, event, data, gui
 from psychopy.tools.filetools import fromFile, toFile
-from itertools import chain
 from random import sample
 from itertools import product,chain,  islice
 import csv
