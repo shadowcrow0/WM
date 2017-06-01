@@ -340,7 +340,7 @@ def process(downs, ups, color, cue, CSI, ProbeType, ProbeType2, CSI2, col_a, col
     core.wait(.8)
     FEEDBACK.pop()
     cue2(CSI2, cat2)
-    (ans2, rt2, res) = probe2(ProbeType2, COLORS, color, col_a, col_b, cat2)
+    (ans2, rt2) = probe2(ProbeType2, COLORS, color, col_a, col_b, cat2)
     get_ans(ans, res=ProbeType2)
     WIN.flip()
     core.wait(.8)
