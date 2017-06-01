@@ -4,7 +4,7 @@ from itertools import chain
 from random import sample
 from itertools import product,chain,  islice
 import csv
-import determine_cue
+#import determine_cue not used 
 
 #INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female'],'block':''}
 #gui.DlgFromDict(dictionary=INFO, title='VWM Task', order=['ID', 'age','block'])
