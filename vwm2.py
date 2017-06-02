@@ -121,12 +121,12 @@ def square(color, pos):
         squ.draw()
 
 
-def determine_cue(cat):
-    if cat == 0:
+def drawCue(cue):
+    if cue == 0:
         cir = visual.Circle(WIN, radius=50, edges=40, lineWidth=3)
         cir.setPos([0, 0])
         cir.draw()
-    elif cat == 1:
+    elif cue == 1:
         dim = visual.Rect(WIN, size=(170, 170), ori=45, lineWidth=3)
         dim.setPos([0, 0])
         dim.draw()
@@ -139,9 +139,8 @@ def chose_pos(downs, ups, cue):  # make frame need seperately
         dim_cir(ups, downs)
 
 
-def set_cols(COLORS, color, cat1, ProbeType, col_a, col_b):
+def getProbeColor(COLORS, color, cue, ProbeType, col_a, col_b):
     col_new = list(chain.from_iterable(set(COLORS) - set(color)))
-    cue = cat1
     res = ProbeType
     if cue == 1:  # diamond circle
         col_positive = col_b
@@ -156,29 +155,6 @@ def set_cols(COLORS, color, cat1, ProbeType, col_a, col_b):
     elif res == 2:
         display_color = col_new[0]
     return display_color
-# about cue and position
-# if cue = 0 refer ups fill with circle, and downs fill in diamond
-# if cue = 1 refer ups -> diamond, downs -> circle
-
-
-def set_cols2(COLORS, color, cat2, ProbeType2, col_a, col_b):
-    col_new = list(chain.from_iterable(set(COLORS) - set(color)))
-    cue = cat2
-    res = ProbeType2
-    if cue == 1:  # diamond circle
-        col_positive = col_b
-        col_intrusion = col_a
-    elif cue == 0:  # circlediamond
-        col_positive = col_a
-        col_intrusion = col_b
-    if res == 0:
-        display_color = col_positive[0]
-    elif res == 1:
-        display_color = col_intrusion[0]
-    elif res == 2:
-        display_color = col_new[0]
-    return display_color
-
 
 def dim(pos1):
     diam = []
@@ -209,23 +185,13 @@ def dim_cir(ups, downs):
     dim(pos1=ups)
     cir(pos2=downs)
 
-
-def cue1(CSI, cat1):
-    cat = cat1
-    determine_cue(cat)
+def showCue(CSI, cue):
+    drawCue(cue)
     WIN.flip()
     core.wait(CSI)
 
-
-def cue2(CSI2, cat2):
-    cat = cat2
-    determine_cue(cat)
-    WIN.flip()
-    core.wait(CSI2)
-
-
-def probe1(ProbeType, COLORS, color, col_a, col_b, cat1):
-    display_color = set_cols(COLORS, color, cat1, ProbeType, col_a, col_b)
+def drawProbe(ProbeType, COLORS, color, col_a, col_b, cue):
+    display_color = getProbeColor(COLORS, color, cue, ProbeType, col_a, col_b)
     squ = visual.Rect(WIN, size=[100, 100], lineColor=None, pos=[
                       0, 0], fillColorSpace="rgb255")
     squ.setFillColor(display_color)
@@ -235,20 +201,6 @@ def probe1(ProbeType, COLORS, color, col_a, col_b, cat1):
     ans = event.waitKeys(keyList=['left', 'right'])
     t2 = core.getTime()
     return (ans, t2 - t1)
-
-
-def probe2(ProbeType2, COLORS, color, col_a, col_b, cat2):
-    display_color = set_cols2(COLORS, color, cat2, ProbeType2, col_a, col_b)
-    squ = visual.Rect(WIN, size=[100, 100], lineColor=None, pos=[
-                      0, 0], fillColorSpace="rgb255")
-    squ.setFillColor(display_color)
-    squ.draw()
-    WIN.flip()
-    t1 = core.getTime()
-    ans = event.waitKeys(keyList=['left', 'right'])
-    t2 = core.getTime()
-    return (ans, t2 - t1)
-
 
 def get_ans(ans, res):
     if res == 0 and ans == ['left']:
@@ -290,14 +242,14 @@ def process(downs, ups, color, cue, CSI, ProbeType, ProbeType2, CSI2, col_a, col
     chose_pos(downs, ups, cue)
     WIN.flip()
     core.wait(5)  # wait for 5000ms and erase them all
-    cue1(CSI, cat1)
-    (ans, rt) = probe1(ProbeType, COLORS, color, col_a, col_b, cat1)
+    showCue(CSI, cat1)
+    (ans, rt) = drawProbe(ProbeType, COLORS, color, col_a, col_b, cat1)
     get_ans(ans, res=ProbeType)
     WIN.flip()
     core.wait(.8)
     FEEDBACK.pop()
-    cue2(CSI2, cat2)
-    (ans2, rt2) = probe2(ProbeType2, COLORS, color, col_a, col_b, cat2)
+    showCue(CSI2, cat2)
+    (ans2, rt2) = drawProbe(ProbeType2, COLORS, color, col_a, col_b, cat2)
     get_ans(ans, res=ProbeType2)
     WIN.flip()
     core.wait(.8)
