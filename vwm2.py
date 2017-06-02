@@ -107,6 +107,9 @@ CSI2 = 5
 cat1 = 0
 cat2 = 1
 
+def drawStimulus(color, pos, downs, ups, cue_order):
+    drawLearningColors(color, pos)
+    drawLearningCues(downs, ups, cue_order)
 
 def drawLearningColors(color, pos):
     for i in range(len(pos)):
@@ -116,10 +119,6 @@ def drawLearningColors(color, pos):
         squ.setPos(pos[i])
         squ.draw()
 
-def drawStimulus(color, pos, downs, ups, cue_order):
-    drawLearningColors(color, pos)
-    drawLearningCues(downs, ups, cue_order)
-
 def drawLearningCues(downs, ups, cue_order):  # make frame need seperately $ Lin: Failed to comprehence.
     if cue_order == 0:
         drawDiamondCue(downs)
@@ -127,6 +126,18 @@ def drawLearningCues(downs, ups, cue_order):  # make frame need seperately $ Lin
     else:
         drawDiamondCue(ups)
         drawCircleCue(downs)
+
+def drawDiamondCue(positions):
+    for i in range(len(positions)):
+        diamond = visual.Rect(WIN, size=(170, 170), ori=45, lineWidth=3)
+        diamond.setPos(pos1[i])
+        diamond.draw()
+
+def drawCircleCue(positions):
+    for i in range(len(positions)):
+        circle = visual.Circle(WIN, radius=50, edges=40, lineWidth=3)
+        circle.setPos(pos1[i])
+        circle.draw()
 
 def getProbeColor(COLORS, color, cue, ProbeType, col_a, col_b):
     col_new = list(chain.from_iterable(set(COLORS) - set(color)))
@@ -144,18 +155,6 @@ def getProbeColor(COLORS, color, cue, ProbeType, col_a, col_b):
     elif res == 2:
         display_color = col_new[0]
     return display_color
-
-def drawDiamondCue(positions):
-    for i in range(len(positions)):
-        diamond = visual.Rect(WIN, size=(170, 170), ori=45, lineWidth=3)
-        diamond.setPos(pos1[i])
-        diamond.draw()
-
-def drawCircleCue(positions):
-    for i in range(len(positions)):
-        circle = visual.Circle(WIN, radius=50, edges=40, lineWidth=3)
-        circle.setPos(pos1[i])
-        circle.draw()
 
 def drawTestingCue(CSI, cue):
     if cue == 0:
