@@ -214,23 +214,27 @@ def showInstr():  # show instruction on screen
     event.waitKeys(keyList=['space'])
     WIN.flip()
 
-
-# main function reacting to the response of the subject
-def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex):
+def learningPhase(color, pos, downs, ups, cue_order):
     drawStimulus(color, pos, downs, ups, cue_order)
     WIN.flip()
-    core.wait(5)  # wait for 5000ms and erase them all
+
+def recognitionPhase(CSI, cat1, ProbeType, color, col_a, col_b, COLORS):
     drawTestingCue(CSI, cat1)
     (ans, rt) = drawProbe(ProbeType, COLORS, color, col_a, col_b, cat1)
     get_ans(ans, res=ProbeType)
     WIN.flip()
     core.wait(.8)
     FEEDBACK.pop()
-    drawTestingCue(CSI2, cat2)
-    (ans2, rt2) = drawProbe(ProbeType2, COLORS, color, col_a, col_b, cat2)
-    get_ans(ans, res=ProbeType2)
-    WIN.flip()
-    core.wait(.8)
-    FEEDBACK.pop()
-    print thisIndex
+    return ans
 
+def testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b):
+    ans = recognitionPhase(CSI, cat1, ProbeType, color, col_a, col_b, COLORS)
+    ans = recognitionPhase(CSI2, cat2, ProbeType2, color, col_a, col_b, COLORS)
+
+# main function reacting to the response of the subject
+def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex, COLORS):
+    learningPhase(color, pos, downs, ups, cue_order)
+    core.wait(5)  # wait for 5000ms and erase them all
+
+    testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b, COLORS)
+    print thisIndex
