@@ -48,6 +48,7 @@ cat1 = []
 cat2 = []
 FEEDBACK = []
 
+
 col_a = ['#006666','#00e673']
 color = ['#ff8000', '#800080','#006666','#00e673']
 col_b = ['#ff8000', '#800080']
@@ -55,18 +56,19 @@ ups = [(200, 100), (-100, 200)]
 pos = [(200, 100), (-100, 200), (-200, -100), (100, -200)]
 downs = [(-200, -100), (100, -200)]
 COLORS =['#00E673','#ff8000', '#800080','#006400' ,'#8b4513' ,'#ffb6c1', '#deb887', '#ff8c00','#006666','#6b8e23' ,'#008080']
-new = list(set(COLORS) - set(color))
+new = list(set(COLORS)- set(color))
 col_new = new[0]
+print(col_new)
 sz = 4
 cue_order = 1
 CSI =.3
 ProbeType =0
 ProbeType2 =2
 CSI2 = 5
+cat = [cat1, cat2]
 cat1 = 0
 cat2 = 1
-new = list(set(COLORS) - set(color))
-col_new = new[0]
+
 
 def drawStimulus(color, pos, downs, ups, cue_order):
     drawLearningColors(color, pos)
@@ -121,31 +123,26 @@ def drawTestingCue(CSI, cue):
     WIN.flip()
     core.wait(CSI)
 
-def determinedisplaycolor(ProbeType, col_new, col_a, col_b, cue):
+def getProbeColor(col_new, cue, ProbeType, col_a, col_b):
+    print col_new
     res = ProbeType
-    display_color = []
-####define cue_order
-    if cue == 1 and res ==0:  # diamond circle
-        col_positive = col_b[0]
-        display_color = col_positive
-    elif cue == 1 and res ==1:  # diamond circle
-        col_intrusion = col_a[0]
-        display_color = col_intrusion
-    elif cue == 1 and res ==2:  # diamond circle
-        display_color =  col_new[0]
-    if cue == 0 and res ==0:  # diamond circle
-        col_positive = col_a[0]
-        display_color = col_positive
-    elif cue == 0 and res ==1:  # diamond circle
-        col_intrusion = col_b[0]
-        display_color = col_intrusion
-    elif cue == 0 and res ==2:  # diamond circle
-        display_color =  col_new[0]
+    if cue == 1:  # diamond circle
+        col_positive = col_b
+        col_intrusion = col_a
+    elif cue == 0:  # circlediamond
+        col_positive = col_a
+        col_intrusion = col_b
+    if res == 0:
+        display_color = col_positive[0]
+    elif res == 1:
+        display_color = col_intrusion[0]
+    elif res == 2:
+        display_color = col_new
     return display_color
 
-
-def drawProbe(ProbeType, col_new, col_a, col_b,display_color):
-    squ = visual.Rect(WIN, size=[100, 100], lineColor=None,pos=[0, 0])
+def drawProbe(ProbeType, col_new, col_a, col_b, cue):
+    display_color = getProbeColor(col_new, cue, ProbeType, col_a, col_b)
+    squ = visual.Rect(WIN, size=[100, 100], lineColor=None, pos=[0, 0])
     squ.setFillColor(display_color)
     squ.draw()
     WIN.flip()
@@ -153,6 +150,7 @@ def drawProbe(ProbeType, col_new, col_a, col_b,display_color):
     ans = event.waitKeys(keyList=['left', 'right'])
     t2 = core.getTime()
     return (ans, t2 - t1)
+
 
 def get_ans(ans, res):
     if res == 0 and ans == ['left']:
@@ -194,22 +192,23 @@ def learningPhase(color, pos, downs, ups, cue_order):
 
 def recognitionPhase(CSI, cue, ProbeType, col_a, col_b, col_new):
     drawTestingCue(CSI, cue)
-    display_color = determinedisplaycolor(ProbeType, col_new, col_a, col_b,cue)
-    (ans, rt) = drawProbe(ProbeType, col_new, col_a, col_b,display_color)
+    display_color = getProbeColor(col_new, cue, ProbeType, col_a, col_b)
+    (ans, rt) = drawProbe(ProbeType, col_new, col_a, col_b, cue)
     get_ans(ans, res=ProbeType)
     WIN.flip()
     core.wait(.8)
     FEEDBACK.pop()
-    return ans
+    return ans,rt
+#learningPhase(color, pos, downs, ups, cue_order)
+#recognitionPhase(CSI, cat1, ProbeType, col_a, col_b, col_new)
 def testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b,COLORS):
     ans = recognitionPhase(CSI, cat1, ProbeType, col_a, col_b, col_new)
     ans = recognitionPhase(CSI2, cat2, ProbeType2, col_a, col_b, col_new)
-testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b,COLORS)
+#testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b,COLORS)
 # main function reacting to the response of the subject
 def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex, COLORS):
     learningPhase(color, pos, downs, ups, cue_order)
     core.wait(5)  # wait for 5000ms and erase them all
-
     testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b, COLORS)
     print thisIndex
-#process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex, COLORS)
+process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex, COLORS)
