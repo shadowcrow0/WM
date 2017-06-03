@@ -3,7 +3,7 @@ from psychopy.tools.filetools import fromFile, toFile
 from random import sample
 from itertools import product, chain,  islice
 import csv
-global display_color
+
 #INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female'],'block':''}
 #gui.DlgFromDict(dictionary=INFO, title='VWM Task', order=['ID', 'age','block'])
 WIN = visual.Window((1366, 800), color="grey", units="pix", fullscr=False)
@@ -122,8 +122,8 @@ def drawTestingCue(CSI, cue):
     core.wait(CSI)
 
 def determinedisplaycolor(ProbeType, col_new, col_a, col_b, cue):
-    display_color = []
     res = ProbeType
+    display_color = []
 ####define cue_order
     if cue == 1 and res ==0:  # diamond circle
         col_positive = col_b[0]
@@ -142,7 +142,9 @@ def determinedisplaycolor(ProbeType, col_new, col_a, col_b, cue):
     elif cue == 0 and res ==2:  # diamond circle
         display_color =  col_new[0]
     return display_color
-def drawProbe(display_color):
+
+
+def drawProbe(ProbeType, col_new, col_a, col_b,display_color):
     squ = visual.Rect(WIN, size=[100, 100], lineColor=None,pos=[0, 0])
     squ.setFillColor(display_color)
     squ.draw()
@@ -190,21 +192,19 @@ def learningPhase(color, pos, downs, ups, cue_order):
     WIN.flip()
     core.wait(5)
 
-def recognitionPhase(CSI, cat1, ProbeType, col_a, col_b, col_new):
-    drawTestingCue(CSI, cat1)
-    display_color = determinedisplaycolor(ProbeType, col_new, col_a, col_b, cue)
-    (ans, rt) = drawProbe(display_color)
+def recognitionPhase(CSI, cue, ProbeType, col_a, col_b, col_new):
+    drawTestingCue(CSI, cue)
+    display_color = determinedisplaycolor(ProbeType, col_new, col_a, col_b,cue)
+    (ans, rt) = drawProbe(ProbeType, col_new, col_a, col_b,display_color)
     get_ans(ans, res=ProbeType)
     WIN.flip()
     core.wait(.8)
     FEEDBACK.pop()
     return ans
-learningPhase(color, pos, downs, ups, cue_order)
-recognitionPhase(CSI, cat1, ProbeType, col_a, col_b, col_new)
 def testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b,COLORS):
-    ans = recognitionPhase(CSI, cat1, ProbeType, color, col_a, col_b, COLORS)
-    ans = recognitionPhase(CSI2, cat2, ProbeType2, color, col_a, col_b, COLORS)
-
+    ans = recognitionPhase(CSI, cat1, ProbeType, col_a, col_b, col_new)
+    ans = recognitionPhase(CSI2, cat2, ProbeType2, col_a, col_b, col_new)
+testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b,COLORS)
 # main function reacting to the response of the subject
 def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex, COLORS):
     learningPhase(color, pos, downs, ups, cue_order)
@@ -212,4 +212,4 @@ def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_
 
     testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b, COLORS)
     print thisIndex
-process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex, COLORS)
+#process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex, COLORS)
