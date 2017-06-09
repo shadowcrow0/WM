@@ -2,9 +2,12 @@ from psychopy import visual, core, gui, event, data
 from random import sample
 from itertools import product, chain,  islice
 import csv
+<<<<<<< HEAD
 import  setstim
 FEEDBACK = []
 
+=======
+>>>>>>> baeb5f38c460629c8470d751b87f7e818a70dbc9
 expInfo = {'ID': '', 'age': '', 'gender': ['Male', 'Female'], 'block': ''}
 # dlg = gui.DlgFromDict(dictionary=expInfo, title='VWM Task', order=['ID', 'age', 'block'])
 # if dlg.OK:
@@ -23,9 +26,56 @@ FEEDBACK_X = visual.TextStim(
 phase = visual.TextStim(win=WIN, text='Practice block.\nPress the "Space" key to continue.', pos=(0, 6), height=0.8)
 instr = visual.TextStim(win=WIN,text='Remmber position and color,\nif color belong same frame, press "Left",otherwise color belong diifent frame, press"Right".\n Press "space" to continue.', pos=(0, 4), height=0.8)
 practice = visual.TextStim(win=WIN,text='This is the practice block.\n''Make judgment if color appear belong same frame.Press "Left",/n color appears in different frame, please press "Right".''Now press the "Space" key to start practice block.', pos=(0, -2), height=0.8)
+<<<<<<< HEAD
 col_new = []
 COLORS = [(0, 230, 115),(255, 128, 0), (128, 0, 128), (0, 100, 0), (139, 69, 19) ,(255, 182, 193), (222, 184, 135), (255, 140, 0), (0, 102, 102), (107, 142, 35) ,(0, 128, 128)]
 
+=======
+###############value import by csv##########
+szs = []  # setsize, determine how many squares need to present
+ProbeType2s = []
+CSI2s = []
+ProbeTypes = []
+CSIs = []
+cue = []
+thisN = []
+thisIndex = []
+col_a = []  # col_a -> top 4 squares
+color = []
+col_b = []  # col_b -> down 4 squares
+ups = []  # top 4 positions
+pos = []  # all position
+downs = []  # down 4 position
+cat2 = []
+FEEDBACK = []
+cat1 = []
+cue_order =[]
+COLORS = [(0, 230, 115),(255, 128, 0), (128, 0, 128), (0, 100, 0), (139, 69, 19) ,(255, 182, 193), (222, 184, 135), (255, 140, 0), (0, 102, 102), (107, 142, 35) ,(0, 128, 128)]
+
+with open('vwm.csv') as csvfile:
+    reader = csv.DictReader(csvfile)
+    for row in reader:
+        szs.append(int(row['sz']))
+        CSIs.append(float(row['CSI']))
+        CSI2s.append(float(row['CSI2']))
+        ProbeTypes.append(int(row['ProbeType']))
+        ProbeType2s.append(int(row['ProbeType2']))
+        cat1.append(int(row['cat1']))
+        cat2.append(int(row['cat2']))
+        cue_order.append(int(row['cueorder']))
+        pos.append(''.join(row['pos']))
+        color.append(row['color'])
+        ups.append(''.join(row['ups']))
+        downs.append(''.join(row['downs']))
+        col_a.append(str(row['col_a']))
+        col_b.append(str(row['col_b']))
+        thisIndex.append(row['position'])
+        thisN.append(row['trial'])
+
+    col_new = list(set(COLORS) - set(color))
+
+
+>>>>>>> baeb5f38c460629c8470d751b87f7e818a70dbc9
 
 def drawStimulus(color, pos, downs, ups, cue_order, sz):
     drawLearningColors(color, pos)
@@ -33,7 +83,11 @@ def drawStimulus(color, pos, downs, ups, cue_order, sz):
 
 def drawLearningColors(color, pos):
     squares = []
+<<<<<<< HEAD
     print repr(int(color))
+=======
+    print type(color), color
+>>>>>>> baeb5f38c460629c8470d751b87f7e818a70dbc9
     for i in range(len(pos)):
         squ = visual.Rect(WIN, size=[100, 100], lineColor=None,fillColorSpace='rgb255')
         squares.append(squ)
@@ -162,8 +216,12 @@ def testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, thisIndex, col_a,
 
 
 # main function reacting to the response of the subject
+<<<<<<< HEAD
 def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, sz, thisIndex):
     col_new = list(set(COLORS) - set(color))
+=======
+def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, sz, col_new, thisIndex):
+>>>>>>> baeb5f38c460629c8470d751b87f7e818a70dbc9
     FIX.draw()
     WIN.flip()
     core.wait(.5)
@@ -174,5 +232,10 @@ def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_
 def main():
     round =80
     for i in range(round):
+<<<<<<< HEAD
         process(sz = sz[i],downs = downs[i], ups = ups[i], color = color[i], cue_order = cue_order[i], CSI = CSIs[i], ProbeType = ProbeTypes[i], ProbeType2 = ProbeType2s[i], CSI2 = CSI2s[i], col_a = col_a[i], col_b = col_b[i], pos = pos[i], cat1 = cat1[i], cat2 = cat2[i],thisIndex = thisIndex[i])
 main()
+=======
+        process(sz = szs[i],downs = downs[i], ups = ups[i], color = color[i], cue_order = cue_order[i], CSI = CSIs[i], ProbeType = ProbeTypes[i], ProbeType2 = ProbeType2s[i], CSI2 = CSI2s[i], col_a = col_a[i], col_b = col_b[i], pos = pos[i], col_new = col_new[i], cat1 = cat1[i], cat2 = cat2[i],thisIndex = thisIndex[i])
+main()
+>>>>>>> baeb5f38c460629c8470d751b87f7e818a70dbc9
