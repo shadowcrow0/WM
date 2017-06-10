@@ -36,4 +36,4 @@ with open('IV.csv') as csvfile:
         #col_b.append(row['col_b'])
         thisIndex.append(row['position'])
         thisN.append(row['trial'])
-#print  sz
+#print  thisN
