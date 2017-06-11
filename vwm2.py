@@ -30,15 +30,17 @@ instr = visual.TextStim(win=WIN,text='Remmber position and color,\nif color belo
 practice = visual.TextStim(win=WIN,text='This is the practice block.\n''Make judgment if color appear belong same frame.Press "Left",/n color appears in different frame, please press "Right".''Now press the "Space" key to start practice block.', pos=(0, -2), height=0.8)
 col_new = []
 COLORS = [(0, 230, 115),(255, 128, 0), (128, 0, 128), (0, 100, 0), (139, 69, 19) ,(255, 182, 193), (222, 184, 135), (255, 140, 0), (0, 102, 102), (107, 142, 35) ,(0, 128, 128)]
-def save_resp(ans, rt, display_color, FEEDBACK, thisIndex, sz):
+def save_resp(ans, rt, display_color, FEEDBACK, thisIndex,thisN,probeseq, sz):
     dataFile = open("%s.csv"%(expInfo['ID']+'_'+expInfo['age']+'_'+expInfo['block']), 'a')
-    rt = str(rt)
     ans = str(ans)
     sz = str(sz)
+    probeseq = str(probeseq)
     FEEDBACK = str(FEEDBACK)
-    display_color = str(display_color)
+    rt = str(rt)
     thisIndex = str(thisIndex)
-    dataFile.write(ans + ','+ rt +',' +display_color +','+ FEEDBACK +',' +thisIndex +','+ sz+'\n')
+    thisN = str(thisN)
+    display_color = str(display_color)
+    dataFile.write(ans + ','+ sz +',' + FEEDBACK +','+thisN+ probeseq +',' +thisIndex +','+ rt +',' +display_color +'\n')
 def get_ans(ans,res):
     if res == 0 and ans == ['left']:
         FEEDBACK_O.draw()
@@ -173,6 +175,9 @@ def recognitionPhase(CSI, cat1, ProbeType,col_new, col_a, col_b):
     get_ans(ans,ProbeType)
     WIN.flip()
     core.wait(.8)
+    probeseq = 1
+    return probeseq
+
 
 def recognitionPhase2(CSI2, cat2, ProbeType2,col_new, col_a, col_b):
     global ans,rt,display_color
@@ -184,14 +189,16 @@ def recognitionPhase2(CSI2, cat2, ProbeType2,col_new, col_a, col_b):
     get_ans(ans,ProbeType2)
     WIN.flip()
     core.wait(.8)
+    probeseq = 2
+    return probeseq
 
 def testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b, col_new):
     global  display_color,rt,ans,FEEDBACK
     recognitionPhase(CSI, cat1, ProbeType,col_new, col_a, col_b)
-    save_resp(ans= ans, rt = rt, display_color = display_color,FEEDBACK = FEEDBACK, thisIndex = thisIndex[i], sz = sz[i])
+    save_resp(ans = ans, rt= rt, display_color = display_color, FEEDBACK = FEEDBACK, thisIndex = thisIndex,thisN = thisN[i],probeseq =probeseq, sz=sz[i])
     FEEDBACK.pop()
     recognitionPhase2(CSI2, cat2, ProbeType2,col_new, col_a, col_b)
-    save_resp(ans = ans, rt = rt, display_color = display_color, FEEDBACK= FEEDBACK, thisIndex= thisIndex[i], sz= sz[i])
+    save_resp(ans = ans, rt= rt, display_color = display_color, FEEDBACK = FEEDBACK, thisIndex = thisIndex,thisN = thisN[i],probeseq =probeseq, sz=sz[i])
     FEEDBACK.pop()
 
 def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisN,sz, thisIndex,COLORS):
@@ -206,5 +213,5 @@ def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_
 
 #process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex,COLORS)
 
-for i in range(:1):
+for i in range(4):
     process(downs = downs[i], ups = ups[i], color = color[i], cue_order = cue_order[i], CSI = CSIs[i], ProbeType = ProbeTypes[i], ProbeType2 = ProbeType2s[i], CSI2 = CSI2s[i], col_a = col_a[i], col_b = col_b[i], pos = pos[i], cat1= cat1[i], cat2 = cat2[i], thisN = thisN[i],sz= sz[i], thisIndex= thisIndex[i],COLORS= COLORS)
