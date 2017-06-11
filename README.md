@@ -1,6 +1,6 @@
 #python 27  #psychopy
 
-#experiment 1 VWM task.**
+# experiment 1 VWM task
 
 random assign positions to circle and diamond.
 
@@ -36,7 +36,7 @@ random assign positions to circle and diamond.
       Feedback(1.5s)
   
 
-#experiment 2 VWM task.**
+# experiment 2 VWM task.**
 
 
   1.fixed cue frame: seperate screen to upside and down.
@@ -70,6 +70,6 @@ random assign positions to circle and diamond.
 
 5.vwm.csv
 
-##optional##
+## optional
 
 If you can't build enviromnent on psychopy, download lib and venv
