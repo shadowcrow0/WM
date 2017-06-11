@@ -162,7 +162,7 @@ def learningPhase(color, pos, downs, ups, cue_order):
     core.wait(5)
 
 def recognitionPhase(CSI, cat1, ProbeType,col_new, col_a, col_b):
-    global ans, rt, display_color
+    global ans, rt, display_color,probeseq
     cue = cat1
     drawTestingCue(CSI, cat1)
     res = ProbeType
@@ -176,7 +176,7 @@ def recognitionPhase(CSI, cat1, ProbeType,col_new, col_a, col_b):
 
 
 def recognitionPhase2(CSI2, cat2, ProbeType2,col_new, col_a, col_b):
-    global ans,rt,display_color
+    global ans,rt,display_color,probeseq
     cue = cat2
     drawTestingCue(CSI2, cat2)
     res = ProbeType2
@@ -189,7 +189,7 @@ def recognitionPhase2(CSI2, cat2, ProbeType2,col_new, col_a, col_b):
     return probeseq
 
 def testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b, col_new):
-    global  display_color,rt,ans,FEEDBACK
+    global  display_color,rt,ans,FEEDBACK, probeseq
     recognitionPhase(CSI, cat1, ProbeType,col_new, col_a, col_b)
     save_resp(ans = ans, rt= rt, display_color = display_color, FEEDBACK = FEEDBACK, thisIndex = thisIndex,thisN = thisN[i],probeseq =probeseq, sz=sz[i])
     FEEDBACK.pop()
@@ -205,7 +205,7 @@ def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_
     learningPhase(color, pos, downs, ups, cue_order)
     core.wait(1)  # wait for 5000ms and erase them all]
     testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b, COLORS)
-    print  thisN, color, pos,
+    print  thisN, color, pos,col_a, col_b
 
 #process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex,COLORS)
 
