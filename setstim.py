@@ -5,29 +5,39 @@ ups = []#top 4 positions
 pos = []#all position
 downs = []#down 4 position
 colors =[]
+col_as =[]# col_a -> top 4 squares
+color = []
+col_bs = []#col_b -> down 4 squares
+upss = []#top 4 positions
+poss = []#all position
+downss = []#down 4 position
+
 import csv
 import  ast
 with open('vwm2.csv') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:
-        color.append(row['color'])
-        col_a.append(row['col_a'])
-        col_b.append(row['col_b'])
-        pos.append(row['pos'])
-        ups.append(row['ups'])
-        downs.append(row['downs'])
-    #print  repr(color)
-    for i in color:
-        color = ast.literal_eval(i)
-        #print  repr(color)
-    for i in col_b:
-        col_b = ast.literal_eval(i)
-    for i in pos:
-        pos = ast.literal_eval(i)
-    for i in col_a:
-        col_a = ast.literal_eval(i)
-    for i in ups:
-        ups = ast.literal_eval(i)
-    for i in downs:
-        downs = ast.literal_eval(i)
-      # print  downs
+        colors.append(row['color'])
+        col_as.append(row['col_a'])
+        col_bs.append(row['col_b'])
+        poss.append(row['pos'])
+        upss.append(row['ups'])
+        downss.append(row['downs'])
+    for i in colors:
+        color.append(ast.literal_eval(i))
+     #   print  repr(color)
+    for i in col_bs:
+        col_b.append(ast.literal_eval(i))
+    #    print len(col_b)
+    for i in poss:
+        pos.append(ast.literal_eval(i))
+   #     print len(pos)
+    for i in col_as:
+        col_a.append(ast.literal_eval(i))
+  #      print len(col_a)
+    for i in upss:
+        ups.append(ast.literal_eval(i))
+ #       print len(ups)
+    for i in downss:
+        downs.append(ast.literal_eval(i))
+#        print  len(downs)
