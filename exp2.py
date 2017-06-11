@@ -14,8 +14,6 @@ expInfo = {'ID': '', 'age': '', 'gender': ['Male', 'Female'], 'block': ''}
 dataName = open("%s.csv" % (expInfo['ID'] + '_' + expInfo['age'] + '_' + expInfo['block']), 'a')
 
 stimList = data.importConditions('vwm.csv', returnFieldNames=True, selection='1:8')
-
-
 print(stimList[6])
 exp = data.ExperimentHandler(name='test', version='0.1', extraInfo=expInfo,
                              runtimeInfo=None, originPath=None, savePickle=True,
