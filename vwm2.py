@@ -16,7 +16,7 @@ dlg = gui.DlgFromDict(dictionary=expInfo, title='VWM Task', order=['ID', 'age', 
 #    toFile('lastParams.pickle', expInfo)  # save params to file for next time
 # else:
 #    core.quit()  # the user hit "cancel" so exit
-WIN = visual.Window((1366, 800), color="grey", units="pix", fullscr=False)
+WIN = visual.Window((1024, 768), color="grey", units="pix", fullscr=False)
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=40,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.',
                             color='white')
@@ -58,7 +58,7 @@ def get_ans(ans,res):
     elif res == 2 and ans == ['left']:
         FEEDBACK_X.draw()
         FEEDBACK.append(0)
-    elif ans == ['left''right'] and ans == ['right''left']:
+    elif ans == ['left','right'] and ans == ['right','left']:
         FEEDBACK.append('p')
     return FEEDBACK
 
@@ -164,6 +164,7 @@ def learningPhase(color, pos, downs, ups, cue_order):
     core.wait(5)
 
 def recognitionPhase(CSI, cat1, ProbeType,col_new, col_a, col_b):
+    global ans, rt, display_color
     cue = cat1
     drawTestingCue(CSI, cat1)
     res = ProbeType
@@ -173,8 +174,8 @@ def recognitionPhase(CSI, cat1, ProbeType,col_new, col_a, col_b):
     WIN.flip()
     core.wait(.8)
 
-
 def recognitionPhase2(CSI2, cat2, ProbeType2,col_new, col_a, col_b):
+    global ans,rt,display_color
     cue = cat2
     drawTestingCue(CSI2, cat2)
     res = ProbeType2
@@ -193,7 +194,8 @@ def testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col
     save_resp(ans = ans, rt = rt, display_color = display_color, FEEDBACK= FEEDBACK, thisIndex= thisIndex[i], sz= sz[i])
     FEEDBACK.pop()
 
-def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisN,sz, thisIndex,COLORS):    FIX.draw()
+def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisN,sz, thisIndex,COLORS):
+    FIX.draw()
     WIN.flip()
     core.wait(.5)
     col_new = list(set(COLORS) - set(color))
@@ -204,5 +206,5 @@ def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_
 
 #process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex,COLORS)
 
-for i in range(5):
+for i in range(:1):
     process(downs = downs[i], ups = ups[i], color = color[i], cue_order = cue_order[i], CSI = CSIs[i], ProbeType = ProbeTypes[i], ProbeType2 = ProbeType2s[i], CSI2 = CSI2s[i], col_a = col_a[i], col_b = col_b[i], pos = pos[i], cat1= cat1[i], cat2 = cat2[i], thisN = thisN[i],sz= sz[i], thisIndex= thisIndex[i],COLORS= COLORS)
