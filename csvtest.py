@@ -7,12 +7,6 @@ CSIs = []
 cue = []
 thisN = []
 thisIndex = []
-col_a =[]# col_a -> top 4 squares
-color = []
-col_b = []#col_b -> down 4 squares
-ups = []#top 4 positions
-pos = []#all position
-downs = []#down 4 position
 cat1 =[]
 cat2 = []
 cue_order = []
@@ -28,12 +22,5 @@ with open('IV.csv') as csvfile:
         cat1.append(int(row['cat1']))
         cat2.append(int(row['cat2']))
         cue_order.append(int(row['cueorder']))
-        #pos.append(row['pos'])
-        #color.append(''.join(row['color']))
-        #ups.append(row['ups'])
-        #downs.append(row['downs'])
-        #col_a.append(row['col_a'])
-        #col_b.append(row['col_b'])
         thisIndex.append(row['position'])
         thisN.append(row['trial'])
-#print  thisN
