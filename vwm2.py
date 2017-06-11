@@ -185,19 +185,15 @@ def recognitionPhase2(CSI2, cat2, ProbeType2,col_new, col_a, col_b):
     core.wait(.8)
 
 def testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b, col_new):
+    global  display_color,rt,ans,FEEDBACK
     recognitionPhase(CSI, cat1, ProbeType,col_new, col_a, col_b)
-    print(type(ans))
-    print(type(rt))
-    print(type(display_color))
     save_resp(ans= ans, rt = rt, display_color = display_color,FEEDBACK = FEEDBACK, thisIndex = thisIndex[i], sz = sz[i])
     FEEDBACK.pop()
     recognitionPhase2(CSI2, cat2, ProbeType2,col_new, col_a, col_b)
     save_resp(ans = ans, rt = rt, display_color = display_color, FEEDBACK= FEEDBACK, thisIndex= thisIndex[i], sz= sz[i])
     FEEDBACK.pop()
 
-def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisN,sz, thisIndex,COLORS):
-    global  display_color,rt,ans,FEEDBACK
-    FIX.draw()
+def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisN,sz, thisIndex,COLORS):    FIX.draw()
     WIN.flip()
     core.wait(.5)
     col_new = list(set(COLORS) - set(color))
