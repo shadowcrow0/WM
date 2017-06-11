@@ -2,8 +2,6 @@ from random import sample, shuffle, randint
 from psychopy import core, event, gui, visual, data, info
 import sys, time, random
 from itertools import chain
-
-
 class SquarePos:
     def __init__(self, position, color, category):
         self.position = position
