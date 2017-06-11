@@ -58,7 +58,11 @@ random assign positions to circle and diamond.
                
   3.Procedure
   
-to do
-adjust structure.
-
-TBD
+# For exp2, you might need#
+1.vwm2.py
+2.csvtest.py
+3.setstim.py
+4.IV.csv
+5.vwm.csv
+##optional##
+If you can't build enviromnent on psychopy, download lib and venv
