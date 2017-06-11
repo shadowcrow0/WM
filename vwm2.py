@@ -8,7 +8,8 @@ from csvtest import sz, thisIndex, thisN,cat2, cat1, ProbeTypes, ProbeType2s, CS
 print  thisN
 display_color =[]
 FEEDBACK = []
-
+rt = []
+ans =[]
 expInfo = {'ID': '', 'age': '', 'gender': ['Male', 'Female'], 'block': ''}
 dlg = gui.DlgFromDict(dictionary=expInfo, title='VWM Task', order=['ID', 'age', 'block'])
 # if dlg.OK:
@@ -185,6 +186,9 @@ def recognitionPhase2(CSI2, cat2, ProbeType2,col_new, col_a, col_b):
 
 def testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b, col_new):
     recognitionPhase(CSI, cat1, ProbeType,col_new, col_a, col_b)
+    print(type(ans))
+    print(type(rt))
+    print(type(display_color))
     save_resp(ans= ans, rt = rt, display_color = display_color,FEEDBACK = FEEDBACK, thisIndex = thisIndex[i], sz = sz[i])
     FEEDBACK.pop()
     recognitionPhase2(CSI2, cat2, ProbeType2,col_new, col_a, col_b)
@@ -200,9 +204,9 @@ def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_
     learningPhase(color, pos, downs, ups, cue_order)
     core.wait(1)  # wait for 5000ms and erase them all]
     testingPhase(CSI, cat1, ProbeType, CSI2, cat2, ProbeType2, color, col_a, col_b, COLORS)
-    print  thisN, color, pos,display_color,ProbeType
+    print  thisN, color, pos,
 
 #process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex,COLORS)
 
-for i in range(20):
+for i in range(5):
     process(downs = downs[i], ups = ups[i], color = color[i], cue_order = cue_order[i], CSI = CSIs[i], ProbeType = ProbeTypes[i], ProbeType2 = ProbeType2s[i], CSI2 = CSI2s[i], col_a = col_a[i], col_b = col_b[i], pos = pos[i], cat1= cat1[i], cat2 = cat2[i], thisN = thisN[i],sz= sz[i], thisIndex= thisIndex[i],COLORS= COLORS)
