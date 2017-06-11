@@ -1,8 +1,6 @@
 from random import sample, shuffle, randint
 from psychopy import core, event, gui, visual, data, info
 import sys, time, random
-
-
 class SquarePos:
     def __init__(self, position, color):
         self.position = position
