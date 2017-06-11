@@ -12,10 +12,6 @@ rt = []
 ans =[]
 expInfo = {'ID': '', 'age': '', 'gender': ['Male', 'Female'], 'block': ''}
 dlg = gui.DlgFromDict(dictionary=expInfo, title='VWM Task', order=['ID', 'age', 'block'])
-# if dlg.OK:
-#    toFile('lastParams.pickle', expInfo)  # save params to file for next time
-# else:
-#    core.quit()  # the user hit "cancel" so exit
 WIN = visual.Window((1024, 768), color="grey", units="pix", fullscr=False)
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=40,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.',
@@ -213,5 +209,5 @@ def process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_
 
 #process(downs, ups, color, cue_order, CSI, ProbeType, ProbeType2, CSI2, col_a, col_b, pos, cat1, cat2, thisIndex,COLORS)
 
-for i in range(4):
+for i in range(10):
     process(downs = downs[i], ups = ups[i], color = color[i], cue_order = cue_order[i], CSI = CSIs[i], ProbeType = ProbeTypes[i], ProbeType2 = ProbeType2s[i], CSI2 = CSI2s[i], col_a = col_a[i], col_b = col_b[i], pos = pos[i], cat1= cat1[i], cat2 = cat2[i], thisN = thisN[i],sz= sz[i], thisIndex= thisIndex[i],COLORS= COLORS)
