@@ -2,28 +2,27 @@ from random import sample, shuffle, randint
 from psychopy import core, event, gui, visual, data, info
 import sys, time, random
 from itertools import chain
-
-
 class SquarePos:
-    def __init__(self, position, color, category):
-        self.position = position
+    def __init__(self, position_neg, position_pos ,color, category):
+        self.position_pos = position_pos
+        self.position_neg = position_neg
+        self.position= position
         self.color = color
         self.category = category #1 or 0
     def draw_cue(self):
         if self.category == 0:
             cir = visual.Circle(WIN, radius = 50, edges = 40, lineWidth = 3)
-            cir.setPos(self.position)
+            cir.setPos(self.position_pos)
             cir.draw()
         elif self.category == 1:
             dim = visual.Rect(WIN, size=(170,170), ori =45, lineWidth =3 )
-            dim.setPos(self.position)
+            dim.setPos(self.position_neg)
             dim.draw()
-
     def draw_square(self, color=None):
         if color == None:
             color = self.color
-        squ = visual.Rect(WIN, size=[100, 100],lineColor =None)
-        squ.setFillColor(color)
+        squ = visual.TextStim(WIN,height=60)
+        squ.setText(color)
         squ.setPos(self.position)
         squ.draw()
     def determine_cue(self):
@@ -36,12 +35,12 @@ class SquarePos:
             dim.setPos([0,0])
             dim.draw()
     def draw_res(self,display_color):
-        squ = visual.Rect(WIN, size=[100, 100],lineColor =None)
-        squ.setFillColor(display_color)
+        squ = visual.TextStim(WIN, color = 'white',height =60)
+        squ.setText(display_color)
         squ.setPos([0,0])
         squ.draw()
 
-def save_ans(rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK,cols_intrusion,cols_positive):
+def save_ans(rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK, selected_colors, selected_pos,cols_intrusion,cols_positive):
     dataFile = open("%s.csv"%(INFO['ID']+'_'+INFO['age']+'_'+INFO['block']), 'a')
     #dataFile.write('rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK\n')
     rt = str(rt)
@@ -51,13 +50,12 @@ def save_ans(rt, ans, stoptime, res, situation,SET_SIZE, FEEDBACK,cols_intrusion
     situation = str(situation)
     SET_SIZE = str(SET_SIZE)
     FEEDBACK = str(FEEDBACK)
-#    color_new=str(color_new)
-#    cat_col=str(cat_col)
-#','+color_new+','+cat_col+selected_pos+
-    #print(FEEDBACK)
+    selected_colors = str(selected_colors) 
+    selected_pos = str(selected_pos)
     cols_intrusion = str(cols_intrusion)
     cols_positive = str(cols_positive)
-    dataFile.write(rt+','+ans+','+stoptime+','+res+','+situation+','+SET_SIZE+','+FEEDBACK+','+cols_intrusion+','+cols_positive+'\n')
+    dataFile.write(rt+','+ans+','+stoptime+','+res+','+situation+','+SET_SIZE+','+FEEDBACK+','+selected_colors+','+selected_pos+','+cols_intrusion+','+cols_positive+'\n')
+#    ,'+cols_intrusion+','+cols_positive+'\n')
 
 
 
@@ -107,8 +105,6 @@ def run_stage2(cue_list, selected_colors,cat_col,color_new):
         display_color = sample(color_new,1)[0]
     elif res ==2:
         display_color = cols_intrusion
-    #print(display_color)
-    #target_cue.determine_cue()
     target_cue.draw_res(display_color)
     WIN.flip()
     t1 = core.getTime()
@@ -143,12 +139,14 @@ INFO = { 'ID': '', 'age': '', 'gender': ['Male', 'Female'],'block':''}
 gui.DlgFromDict(dictionary=INFO, title='VWM Task', order=['ID', 'age','block'])
 CASES = [0,1]
 WIN = visual.Window((1366, 800), color="grey", units="pix",fullscr = True)
-POSITIONS = [(100, 200), (100, -200), (-100, 200), (200, 100), (200, -100), (-200, 100), (-200, -100), (-100, -200)]
-COLORS = ['#50C878','#1E90FF','#000080','#FF0000','#8B008B','#6699cc','#006374','#4D3900', '#7853C4', '#8B0000','#FF00FF', '#CFB46F']
-# '#0000FF', '#800080', '#FFC0CB','#FFFF00', '', '#008000', ','#F83759','#FFA500', '#C45366', ', '#CFB46F', '#6FCF80']
+POSITIONS_pos = [(100, 200), (-100, 200), (200, 100),  (-200, 100)]
+POSITIONS_neg = [(100, -200), (200, -100),  (-200, -100), (-100, -200)]
+
+COLORS = ['I','II','III','IV','V','VI','VII','VIII', 'IX', 'XI','XII', 'X']
+
 STOPTIME_LIST = [ sample([0.3, 2],2) for x in range(480)]
 ALERT_MSG = visual.TextStim(WIN, pos=(0, 4), height=40,
-                            text='Get Ready for VWM task. Remember color and frame, \nPress "Space" to start.', color = 'white')
+                            text='Get Ready for VWM task. Remember word and frame, \nPress "Space" to start.', color = 'white')
 FIX = visual.TextStim(WIN, text='+', height=120, color='white', pos=(0, 0))
 FEEDBACK_O = visual.TextStim(WIN, pos=(0, 4), height=30,text='Correct.', color = 'white')
 FEEDBACK_X = visual.TextStim(WIN, pos=(0, 4), height=30,text='Wrong.', color = 'white')
@@ -161,11 +159,12 @@ REST_MSG = visual.TextStim(WIN, pos=(0, 4), height=50,
 def trial(stoptime):
     cue_category=[[],[]]
     selected_colors = sample(COLORS, SET_SIZE*2)
-    selected_pos =sample(POSITIONS, SET_SIZE*2)
+    selected_pos_pos =sample(POSITIONS_pos, SET_SIZE)
+    selected_pos_neg =sample(POSITIONS_neg, SET_SIZE)
+    selected_pos = list(chain.from_iterable(selected_pos_pos + selected_pos_neg))
     color_new = list(set(COLORS)- set(selected_colors))
     squares_pos = []
     cat_col = [[],[]]
-    
     '''init'''
     for i, pos in enumerate(selected_pos):
         color = selected_colors[i]
@@ -173,7 +172,9 @@ def trial(stoptime):
         if len(cue_category[category]) == SET_SIZE: #A full or B full
             category = 0 if category == 1 else 1
         cat_col[category].append(color)
-        squ = SquarePos(pos, color, category)
+        position_neg = selected_pos_neg
+        position_pos = selected_pos_pos 
+        squ = SquarePos(color, category, pos)
         squares_pos.append(squ)
         cue_category[category].append(squ)
 
@@ -185,8 +186,8 @@ def trial(stoptime):
         WIN.flip()
         get_ans(ans,res)
         WIN.flip()
-        core.wait(1.5)
-        save_ans(rt = rt,ans=ans, stoptime=stoptime[i], res = res, situation=situation,SET_SIZE = SET_SIZE, FEEDBACK= FEEDBACK,cols_intrusion = cols_intrusion,cols_positive=cols_positive)
+        core.wait(.8)
+        save_ans(rt = rt,ans=ans, stoptime=stoptime[i], res = res, situation=situation,SET_SIZE = SET_SIZE, FEEDBACK= FEEDBACK,selected_colors= selected_colors,selected_pos= selected_pos, cols_intrusion = cols_intrusion,cols_positive=cols_positive)
         FEEDBACK.pop()
 
 #,color_new=color_new,cat_col=cat_col,selected_pos =selected_pos
