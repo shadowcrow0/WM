@@ -2,6 +2,8 @@ from itertools import product, chain,  islice
 from random import sample, shuffle, randint
 from psychopy import core, event, gui, visual, data, info
 FEEDBACK = []
+CASES = [0,1]
+SZ_LIST = [sample([1,2,3,4],4) for x in range(12)]
 WIN = visual.Window((1024, 768), monitor='testMonitor',color="grey", units="pix", fullscr=False)
 expInfo = {'ID': '', 'age': '', 'gender': ['Male', 'Female'], 'block': ''}
 dlg = gui.DlgFromDict(dictionary=expInfo, title='VWM Task', order=['ID', 'age', 'block'])
@@ -34,22 +36,9 @@ class Group(Block):
         self.col_a = col_a
         self.col_b = col_b
         self.col_new = col_new
-    def decideSZ(self):
-        self.sz = shuffle(range(4))
-    def decidePos(self):
-        up = (100, 200), (100, -200), (-100, 200), (200, 100)
-        self.ups = sample(up,self.sz)
-        down = (200, -100), (-200, 100), (-200, -100), (-100, -200)
-        self.downs = sample(down,self.sz)
-        self.pos = (self.ups,self.downs)
-        return  self.pos,self.ups, self.downs
-    def decideColors(self):
-        self.color = sample(COLORS, self.sz*2)
-        self.col_a = self.color[1:self.sz]
-        self.col_b = self.color[self.sz:2*self.sz]
-        self.col_new = list(set(COLORS)- set(self.color))
+
 class Response(Group):
-    def __init__(self, category, display_color, probetype,CSI,seq,ans,RT,Feedback,block, index,col_new,col_b ,col_a, downs, ups, color , positions, sz):
+    def __init__(self, category, display_color, probetype,CSI,seq,ans,RT,FEEDBACK,block, index,col_new,col_b ,col_a, downs, ups, color , positions, sz):
         super(Response,self).__init__(block, index,col_new,col_b ,col_a, downs, ups, color , positions, sz)
         self.probetype = probetype
         self.CSI = CSI
@@ -59,51 +48,46 @@ class Response(Group):
         self.RT = RT
         self.FEEDBACK = FEEDBACK
         self.display_color = display_color
-    def decideProbeType(self):
-        for i in range(2):
-            self.probetype = sample([0, 0, 1, 2],1)[0]
-        return self.probetype
-    def decideCSI(self):
-        for i in range(2):
-            self.CSI = sample([.3,2,5],1)[0]
-        return self.CSI
-    def decideSeq(self):
-        self.seq = shuffle(0,1)
-    def drawLearningCues(self):
-        if self.category == 0:
-            cir = visual.Circle(WIN, radius = 50, edges = 40, lineWidth = 3)
-            cir.setPos(self.ups)
-            cir.draw()
-            dim = visual.Rect(WIN, size=(170,170), ori =45, lineWidth =3 )
-            dim.setPos(self.downs)
-            dim.draw()
-        elif self.category == 1:
-            dim = visual.Rect(WIN, size=(170,170), ori =45, lineWidth =3 )
-            dim.setPos(self.ups)
-            dim.draw()
-            cir = visual.Circle(WIN, radius = 50, edges = 40, lineWidth = 3)
-            cir.setPos(self.downs)
-            cir.draw()
-    def LearningSquare(self, color=None):
-        if color == None:
-            color = self.color
-        squ = visual.Rect(WIN, size=[100, 100],lineColor =None)
-        squ.setFillColor(color, 'rgb255')
-        squ.setPos(self.positions)
-        squ.draw()
-    def getProbeColor(self):
-        if self.category == 1:  # diamond circle
-            col_positive = self.col_b
-            col_intrusion = self.col_a
-        elif self.category == 0:  # circlediamond
-            col_positive = self.col_a
-            col_intrusion = self.col_b
-        if self.probetype == 0:
-            self.display_color = col_positive[0]
-        elif self.probetype == 1:
-            self.display_color = col_intrusion[0]
-        elif self.probetype == 2:
-            self.display_coloself.col_new[0]
+    def drawLearningCues(self):  # make frame need seperately $ Lin: Failed to comprehence.
+        if self.seq == 0:
+            diam = []
+            for j in range(len(self.downs)):
+                dim = visual.Rect(WIN, size=(170, 170), ori=45, lineWidth=3)
+                diam.append(dim)
+            for idx, dim in enumerate(diam):
+                dim.setPos(self.downs[idx])
+                diam.draw()
+            circle = []
+            for j in range(len(self.ups)):
+                cir = visual.Circle(WIN, radius=50, edges=40, lineWidth=3)
+                circle.append(cir)
+            for idx, cir in enumerate(circle):
+                cir.setPos(self.ups[idx])
+                circle.draw()
+        else:
+            diam = []
+            for j in range(len(self.ups)):
+                dim = visual.Rect(WIN, size=(170, 170), ori=45, lineWidth=3)
+                diam.append(dim)
+            for idx, dim in enumerate(diam):
+                dim.setPos(self.ups[idx])
+                diam.draw()
+            circle = []
+            for j in range(len(self.downs)):
+                cir = visual.Circle(WIN, radius=50, edges=40, lineWidth=3)
+                circle.append(cir)
+            for idx, cir in enumerate(circle):
+                cir.setPos(self.downs[idx])
+                circle.draw()
+    def drawLearningColors(self):
+        squares = []
+        for i in range(len(self.positions)):
+            squ = visual.Rect(WIN, size=[100, 100], lineColor=None,fillColorSpace='rgb255')
+            squares.append(squ)
+        for idx, squ in enumerate(squares):
+            squ.setFillColor(self.color[idx],'rgb255')
+            squ.setPos(self.positions[idx])
+            squ.draw()
     def drawProbe(self):
         squ = visual.Rect(WIN, size=[100, 100],lineColor =None)
         squ.setFillColor(self.display_color,'rgb255')
@@ -115,43 +99,122 @@ class Response(Group):
         t2 = core.getTime()
         self.RT =  t2 - t1
         return self.ans, self.RT
-    def get_ans(self):
-        if self.probetype == 0 and self.ans == ['left']:
-            FEEDBACK_O.draw()
-            self.FEEDBACK.append(1)
-        elif self.probetype == 1 and self.ans == ['right']:
-            FEEDBACK_O.draw()
-            self.FEEDBACK.append(1)
-        elif self.probetype == 2 and self.ans == ['right']:
-            FEEDBACK_O.draw()
-            self.FEEDBACK.append(1)
-        elif self.probetype == 0 and self.ans == ['right']:
-            FEEDBACK_X.draw()
-            self.FEEDBACK.append(0)
-        elif self.probetype == 1 and self.ans == ['left']:
-            FEEDBACK_X.draw()
-            self.FEEDBACK.append(0)
-        elif self.probetype == 2 and self.ans == ['left']:
-            FEEDBACK_X.draw()
-            self.FEEDBACK.append(0)
-        elif self.ans == ['left','right'] and self.ans == ['right','left']:
-            self.FEEDBACK.append('p')
-        return self.FEEDBACK
-    def save_resp(self,ans, RT, seq, display_color, FEEDBACK, probeseq, sz):
+    def save_resp(self, ans, RT, cue, display_color, seq, FEEDBACK, sz):
         dataFile = open("%s.csv"%(expInfo['ID']+'_'+expInfo['age']+'_'+expInfo['block']), 'a')
         self.ans = str(ans)
         self.sz = str(sz)
-        self.seq = str(seq)
+        self.cue = str(cue)
         self.FEEDBACK = str(FEEDBACK)
         self.RT = str(RT)
         self.display_color = str(display_color)
-        dataFile.write(ans + ','+ sz +',' + FEEDBACK +','+ probeseq +','+ RT +',' +display_color +'\n')
+        dataFile.write(ans + ','+ sz +',' + FEEDBACK +','+ seq +','+ RT +',' +display_color +'\n')
+def TestingCues(CSI,seq):
+    if seq == 0:
+        cir = visual.Circle(WIN, radius = 50, edges = 40, lineWidth = 3)
+        cir.setPos([0,0])
+        cir.draw()
+    elif seq == 1:
+        dim = visual.Rect(WIN, size=(170,170), ori =45, lineWidth =3 )
+        dim.setPos([0,0])
+        dim.draw()
+    WIN.flip()
+    core.wait(CSI)
+def get_ans(probetype,ans):
+    if probetype == 0 and ans == ['left']:
+        FEEDBACK_O.draw()
+        FEEDBACK.append(1)
+    elif probetype == 1 and ans == ['right']:
+        FEEDBACK_O.draw()
+        FEEDBACK.append(1)
+    elif probetype == 2 and ans == ['right']:
+        FEEDBACK_O.draw()
+        FEEDBACK.append(1)
+    elif probetype == 0 and ans == ['right']:
+        FEEDBACK_X.draw()
+        FEEDBACK.append(0)
+    elif probetype == 1 and ans == ['left']:
+        FEEDBACK_X.draw()
+        FEEDBACK.append(0)
+    elif probetype == 2 and ans == ['left']:
+        FEEDBACK_X.draw()
+        FEEDBACK.append(0)
+    elif ans == ['left','right'] and ans == ['right','left']:
+        FEEDBACK.append('p')
+    return Response.FEEDBACK
+def decideSZ():
+#    for i in range(4):
+    sz = sample([1,2,3,4],4)
+    return sz
+def decideProbeType():
+    for i in range(2):
+        probetype = sample([0, 0, 1, 2],1)[0]
+    return probetype
+def decideCSI():
+    for i in range(2):
+        CSI = sample([.3,2,5],1)[0]
+    return CSI
+def decideSeq():
+    seq = shuffle(0,1)
+    return seq
+def decidePos(sz):
+    up = (100, 200), (100, -200), (-100, 200), (200, 100)
+    ups = sample(up,sz)
+    down = (200, -100), (-200, 100), (-200, -100), (-100, -200)
+    downs = sample(down,sz)
+    positions = list(ups,downs)
+    return  positions,ups, downs
+def decideColors(sz):
+    color = sample(COLORS, sz*2)
+    col_a = color[1:sz]
+    col_b = color[sz:2*sz]
+    col_new = list(set(COLORS)- set(color))
+    return  col_a, color, col_b, col_new
+def getProbeColor(col_b, col_a, col_new, category, probetype):
+    if category == 1:  # diamond circle
+        col_positive = col_b
+        col_intrusion = col_a
+    elif category == 0:  # circlediamond
+        col_positive = col_a
+        col_intrusion = col_b
+    if probetype == 0:
+        display_color = col_positive[0]
+    elif probetype == 1:
+        display_color = col_intrusion[0]
+    elif probetype == 2:
+        display_color = col_new[0]
+    return display_color
+def component():
+    '''repeat 4 time by random, each component has setsize1-4'''
+    Group.sz = decideSZ()
+    for i in Group.sz:
+        Group.positions, Group.ups, Group.downs = decidePos(i)#i=sz
+        Group.color, Group.col_a, Group.col_b, Group.col_new = decideColors(i)
+        FIX.draw()
+        WIN.flip()
+        core.wait(.5)
+        Response.LearningColors(Group.color,Group.positions)
+        Response.category =randint(0, 1)
+        Response.drawLearningCues(Response.category)
+        for j in enumerate(sample(CASES, 2)):
+            Response.cue = j
+            Response.CSI = decideCSI()
+            Response.probetype = decideProbeType()
+            Response.display_color = getProbeColor(Group.color,Group.col_a, Group.col_b, Group.col_new)
+            TestingCues(Response.CSI,Response.seq)
+            Response.ans, Response.RT = Response.drawProbe(Response.display_color)
+            Response.FEEDBACK = get_ans(Response.ans,Response.probetype)
+            Response.save_resp(Response.ans, Response.RT, Response.cue, Response.display_color, Response.FEEDBACK, Group.sz[i])
+            Response.FEEDBACK.pop()
+def main():
+    ALERT_MSG.draw()
+    WIN.flip()
+    event.waitKeys(keyList=['space'])
+    rounds = 2
+    instr.draw()
+    WIN.flip()
+    event.waitKeys(keyList=['space'])
+    for i in range(rounds):#total 48
+      for i in range(6):
+        component() #24 trials
 
-def trial():
-    selected_color, col_a, col_b, col_new = Group.decideColors()
-    selected_pos, ups, downs = Group.decidePos()
-    Probetype = Response.decideProbeType()
-    CSI = Response.decideCSI()
-    display_color = Response.getProbeColor()
-    Probetype2= Response.decideProbeType()
-    CSI2 = Response.decideCSI()
+main()
