@@ -15,7 +15,7 @@ FEEDBACK_X = visual.TextStim(win = WIN, pos=(0, 4), height=30, text='INCORRECT!'
 phase = visual.TextStim(win = WIN, text='Practice block.\nPress the "Space" key to continue.', pos=(0, 6), height=0.8)
 instr = visual.TextStim(win = WIN,text='Remmber position and color,\nif color belong same frame, press "Left",otherwise color belong diifent frame, press"Right".\n Press "space" to continue.', pos=(0, 4), height=0.8)
 practice = visual.TextStim(win = WIN,text='This is the practice block.\n''Make judgment if color appear belong same frame.Press "Left",/n color appears in different frame, please press "Right".''Now press the "Space" key to start practice block.', pos=(0, -2), height=0.8)
-COLORS = (0, 230, 115),(255, 128, 0),(128, 0, 128),(0, 100, 0),(139, 69, 19) ,(255, 182, 193),(222, 184, 135),(255, 140, 0),(0, 102, 102),(107, 142, 35),(0, 128, 128)
+COLORS = ["#ffb6c1", "#deb887", "#ff8000", "#800080", "#00e673", "#008080", "#ff8c00", "#006666","#006400","#6B8E23","#8b4513"]
 FIX = visual.TextStim(win = WIN, text='+', height=120, color='white', pos=(0, 0))
 expInfo = {'ID': '', 'age': '', 'gender': ['Male', 'Female'], 'block': ''}
 
@@ -168,7 +168,7 @@ def decideColors(sz):
     col_a = color[0:sz]
     col_b = color[sz:2*sz]
     col_new = list(set(COLORS)- set(color))
-    return  col_a, color, col_b, col_new
+    return  [col_a, color, col_b, col_new]
 def getProbeColor(col_b, col_a, col_new, seq, probetype):
     col_intrusion=[]
     col_positive =[]
@@ -208,13 +208,12 @@ def recognitionPhase(CSI,seq, ans, probetype):
 
 def component():
     '''repeat 4 time by random, each component has setsize1-4'''
-    stimulus_pos = []
-    response_pos = []
     Response.sz = decideSZ()
     for i in Response.sz:
         Response.positions, Response.ups, Response.downs = decidePos(i)#i=sz
-        Response.color, Response.col_a, Response.col_b, Response.col_new = decideColors(i)
+        Response.color, Response.col_a, Response.col_b ,Response.col_new = decideColors(i)
         Response.seq = decideSeq()
+        print Response.color
         drawStimulus(Response.seq,Response.downs, Response.ups, Response.positions,Response.color)
 
         for j in enumerate(Response.seq):
