@@ -14,15 +14,16 @@ ALERT_MSG = visual.TextStim(win = WIN, pos=(0, 4), height=40,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.',
                             color='white')
 class Block():
-    def __init__(self,block):#,szs,block):#, szs, block):
-        self.block = block
+    def __init__(self,block):#, szs, block):
         self.szs = self.setszs()
+        self.block = block
     def setszs(self):
         szs = sample([1, 2, 3, 4], 4)
         return  szs
 
-class Group():
-    def __init__(self,sz,block):#s,block, index,col_new,col_b ,col_a, downs, ups, color , pos, sz):
+class Group(Block):
+    def __init__(self,block, sz):
+        super(Group,self).__init__(self,block)
         self.sz = sz
         self.pos = self.decidePos(sz)
         self.color = self.decideColor(sz)
@@ -32,10 +33,6 @@ class Group():
         self.col_b = self.decideColor(sz)
         self.col_new =self.decideColor(sz)
         self.block = block
-        self.szs = self.setszs()
-    def setszs(self):
-        szs = sample([1, 2, 3, 4], 4)
-        return szs
     def decidePos(self,sz):
         up = [(100, 200), (100, -200), (-100, 200), (200, 100)]
         self.ups = sample(up,sz)
@@ -58,8 +55,10 @@ class Group():
             self.color = list(chain.from_iterable([self.col_a, self.col_b]))
             self.col_new = list(set(COLORS) - set(self.color))
         return self.color, self.col_b, self.col_a, self.col_new
-class Response():
-    def __init__(self, pos,  block, col_new,col_b ,col_a, downs, ups, color):# , positions, sz):
+
+class Response(Group):
+    def __init__(self,  block, col_new, col_b, col_a, downs, ups, color, positions, sz):
+        super(Response, self).__init__(block,  col_new, col_b, col_a, downs, ups, color, positions, sz)
         self.conds = self.choseCondition()
         self.probetype = self.choseProbetype()
         self.CSI = self.choseCSI()
@@ -200,8 +199,6 @@ class Response():
             ans + ',' + sz + ',' + FEEDBACK + ',' + seq + ',' + RT + ','+probetype +','+ CSI +',' + display_color + ',' + color + ',' + pos + '\n')
 def trial():
     b = Block(1)
-    szs = b.setszs()
-    print szs
     szs = b.setszs()
     for sz in szs:
         g = Group(sz, 1)
