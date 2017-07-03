@@ -5,7 +5,7 @@ FEEDBACK = []
 expInfo = {'ID': '', 'age': '', 'gender': ['Male', 'Female'], 'block': ''}
 gui.DlgFromDict(dictionary=expInfo, title='VWM Task-2', order=['ID', 'age','block'])
 COLORS = [(0, 128, 128),(139, 69, 19),(255, 255, 0),(255, 0, 0),(0, 0, 128),(255, 182, 193),(222, 184, 135),(0, 0, 255),(255, 0, 255),(128, 0, 128),(0, 100, 0)]
-WIN = visual.Window((1024, 768), monitor='testMonitor',color="grey", units="pix", fullscr=True)
+WIN = visual.Window((1024, 768), monitor='testMonitor',color="grey", units="pix", fullscr=False)
 FEEDBACK_O = visual.TextStim(win = WIN, pos=(0, 4), height=30, text='CORRECT!', color='white')
 FEEDBACK_X = visual.TextStim(win = WIN, pos=(0, 4), height=30, text='INCORRECT!', color='white')
 phase = visual.TextStim(win = WIN, text='Practice block.\nPress the "Space" key to continue.', pos=(0, 6), height=0.8)
@@ -116,8 +116,8 @@ class Response(condition):
         dataFile = open("%s.csv" % (expInfo['ID'] + '_' + expInfo['age'] + '_' + expInfo['block']), 'a')
         sz = len(self.positionz)
         dataFile.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}'.format(self.order,sz,self.conds,self.CSI, self.probetype,
-                                                                             self.display_color,self.ans, self.FEEDBACK,self.RT,
-                                                                             self.positionz, self.ups, self.downs, self.col_new, self.color,
+                                                                             self.ans, self.FEEDBACK,self.RT,
+                                                                             self.positionz, self.ups, self.downs,self.display_color, self.col_new, self.color,
                                                                              self.col_a, self.col_b)+'\n')
 def decidePos(sz):
     up = [(100, 200), (-200, 100), (-100, 200), (200, 100)]
@@ -146,13 +146,8 @@ def choseCondition():
     condition = range(1,49)
     conditions = sample(condition, 48)
     return  conditions
-def choseProbetype(conds):
-    if conds % 2 != 0:
-        probetype = 0
-    elif conds % 4 == 0:
-        probetype = 2
-    else:
-        probetype = 1
+def choseProbetype():
+    probetype = sample([0,0,1,2],1)[0]
     return probetype
 def choseCSI(conds):
     if conds % 3 == 0:
@@ -226,7 +221,7 @@ def getAns(probetype,ans):
 
 def ProbeStage(elem,o,o2,conds):
     for i in [o,o2]:
-        probetype = choseProbetype(conds)
+        probetype = choseProbetype()
         CSI = choseCSI(conds)
         display_color = getProbeColor(probetype, i, elem.col_a, elem.col_b, elem.col_new)
         conditions = condition(elem.positionz, elem.ups, elem.downs, elem.col_new, elem.color,
@@ -266,7 +261,7 @@ def fourtrials():
         cols = decideColor(sz)
         elem = Element(pos[0], pos[1], pos[2], cols[0], cols[1], cols[2], cols[3], o)
         Task(elem,o,o2,conds)
-    print  'finish 16 trials'
+    print  'finish 48 trials'
 
 def for48():
     ALERT_MSG.draw()
