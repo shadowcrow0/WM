@@ -3,17 +3,20 @@ from psychopy import core, event, gui, visual, data, info
 from itertools import chain
 FEEDBACK = []
 expInfo = {'ID': '', 'age': '', 'gender': ['Male', 'Female'], 'block': ''}
-#gui.DlgFromDict(dictionary=expInfo, title='VWM Task-2', order=['ID', 'age','block'])
+gui.DlgFromDict(dictionary=expInfo, title='VWM Task-2', order=['ID', 'age','gender','block'])
 COLORS = [(0, 128, 128),(139, 69, 19),(255, 255, 0),(255, 140, 0),(0, 0, 128),(255, 182, 193),(222, 184, 135),(0, 0, 255),(0, 102, 102),(128, 0, 128),(107, 142, 35)]
-WIN = visual.Window((1024, 768), monitor='testMonitor',color="grey", units="pix", fullscr=Ture)
+WIN = visual.Window((1024, 768), monitor='testMonitor',color="grey", units="pix", fullscr=True)
 FEEDBACK_O = visual.TextStim(win = WIN, pos=(0, 4), height=30, text='CORRECT!', color='white')
 FEEDBACK_X = visual.TextStim(win = WIN, pos=(0, 4), height=30, text='INCORRECT!', color='white')
-phase = visual.TextStim(win = WIN, text='Practice block.\nPress the "Space" key to continue.', pos=(0, 6), height=0.8)
+phase = visual.TextStim(win = WIN, text='Ready to go?\nPress the "Space" key to continue.', pos=(0, 6), height=0.8)
 instr = visual.TextStim(win = WIN,text='Remember position and color,\nif color belong same frame, press "Left",otherwise color belong diifent frame, press"Right".\n Press "space" to continue.', pos=(0, 4), height=0.8)
 practice = visual.TextStim(win = WIN,text='This is the practice block.\n''Make judgment if color appear belong same frame.Press "Left",/n color appears in different frame, please press "Right".''Now press the "Space" key to start practice block.', pos=(0, -2), height=0.8)
 FIX = visual.TextStim(win = WIN, text='+', height=120, color='white', pos=(0, 0))
 ALERT_MSG = visual.TextStim(win = WIN, pos=(0, 4), height=40,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.',
+                            color='white')
+BLOCK_MSG = visual.TextStim(win = WIN, pos=(0, 4), height=40,
+                            text='Finish 36 trials, take  a rest, if you are ready, \nPress "Space" to start.',
                             color='white')
 class Element(object):
     def __init__(self, positionz, ups, downs, col_new, color, col_b, col_a, context):
@@ -125,7 +128,7 @@ class Log(Response):
         self.FEEDBACK = FEEDBACK
         self.RT = RT
     def logData(self):
-        dataFile = open("%s.csv" % (expInfo['ID'] + '_' + expInfo['age'] + '_' + expInfo['block']), 'a')
+        dataFile = open("{}_{}_{}.csv".format(expInfo['ID'] , expInfo['age'] , expInfo['gender']), 'a')
         sz = len(self.positionz)
         dataFile.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}'.format(self.context,sz,self.conds,self.CSI, self.probetype,
                                                                              self.ans, self.FEEDBACK,self.RT,
@@ -155,8 +158,8 @@ def decideColor(sz):
     return col_new,colors,col_b,col_a
 
 def choseCondition():
-    condition = range(1,49)
-    conditions = sample(condition, 48)
+    condition = range(1,37)
+    conditions = sample(condition, 36)
     return  conditions
 def choseProbetype():
     probetype = sample([0,0,1,2],1)[0]
@@ -296,14 +299,17 @@ def fourtrials():
         WIN.flip()
         core.wait(5)
         Task(elem,conds)
-    print  'finish 48 trials'
-fourtrials()
-def for48():
-    ALERT_MSG.draw()
-    WIN.flip()
-    event.waitKeys(keyList=['space'])
-    for i in range(4):
-        fourtrials()
-#for48()
-# for i in range(10):
-#     for48()
+    print  'finish 36 trials'
+def for10Bblock():
+   ALERT_MSG.draw()
+   WIN.flip()
+   event.waitKeys(keyList=['space'])
+   for i in range(10):
+       fourtrials()
+       BLOCK_MSG.draw()
+       WIN.flip()
+       event.waitKeys(keyList=['space'])
+       phase.draw()
+       WIN.flip()
+       event.waitKeys(keyList=['space'])
+for10Bblock()
