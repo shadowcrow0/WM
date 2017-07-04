@@ -167,9 +167,9 @@ def choseCSI(conds):
     if conds % 3 == 0:
         CSI = .3
     elif conds % 3 == 2:
-        CSI = int(2)
+        CSI = 2
     else:
-        CSI = int(5)
+        CSI = 5
     return CSI
 
 def decideSZ(conds):
@@ -293,7 +293,7 @@ def fourtrials():
         FIX.draw()
         WIN.flip()
         core.wait(.8)
-        sz = 1
+        sz = decideSZ(conds)
         context =randint(0,1)
         pos = decidePos(sz)
         cols = decideColor(sz)
@@ -311,3 +311,10 @@ def for48():
 #    event.waitKeys(keyList=['space'])
     for i in range(4):
         fourtrials()
+#for48()
+# for i in range(10):
+#     for48()
+#0	4	38	0.3	2	['right']	[1]	2.837929353	[(-100	 200)	 (100	 200)	 (200	 -100)	 (-200	 -100)]	[(-100	 200)	 (100	 200)]	[(200	 -100)	 (-200	 -100)]	(255	255	 0)	[(255	255	 0)	 (222	184	 135)	 (0	0	 255)	 (255	0	 0)	 (0	100	 0)	 (0	128	 128)	 (255	182	 193)]	[(0	0	 128)	 (139	69	 19)	 (255	0	 255)	 (128	0	 128)]	[(0	0	 128)	 (139	69	 19)]	[(255	0	 255)	 (128	0	 128)]
+#self.order,sz,self.conds,self.CSI, self.probetype,self.ans, self.FEEDBACK,self.RT,self.positionz, self.ups, self.downs,self.display_color, self.col_new, self.color,self.col_a, self.col_b)+
+# order = 1
+# sz =
