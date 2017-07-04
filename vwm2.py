@@ -16,7 +16,7 @@ ALERT_MSG = visual.TextStim(win = WIN, pos=(0, 4), height=40,
                             text='Get Ready for VWM task. Remember color and position, \nPress "Space" to start.',
                             color='white')
 class Element(object):
-    def __init__(self, positionz, ups, downs, col_new, color, col_b, col_a, order):
+    def __init__(self, positionz, ups, downs, col_new, color, col_b, col_a, context):
         self.positionz = positionz
         self.ups = ups
         self.downs = downs
@@ -24,19 +24,28 @@ class Element(object):
         self.color = color
         self.col_b = col_b
         self.col_a = col_a
-        self.order =order
+        self.context =context
+
     def drawContent(self):
-        squares = []
-        for i in range(len(self.positionz)):
+        squ_ups = []
+        for i in range(len(self.ups)):
             squ = visual.Rect(WIN, size=[100, 100], lineColor=None)  # , fillColorSpace='rgb255')
-            squares.append(squ)
-        for idx, squ in enumerate(squares):
-            squ.setPos(self.positionz[idx])
-            squ.setFillColor(self.color[idx], 'rgb255')
+            squ_ups.append(squ)
+        for idx, squ in enumerate(squ_ups):
+            squ.setPos(self.ups[idx])
+            squ.setFillColor(self.col_a[idx], 'rgb255')
+            squ.draw()
+        squ_downs = []
+        for i in range(len(self.downs)):
+            squ = visual.Rect(WIN, size=[100, 100], lineColor=None)  # , fillColorSpace='rgb255')
+            squ_downs.append(squ)
+        for idx, squ in enumerate(squ_downs):
+            squ.setPos(self.downs[idx])
+            squ.setFillColor(self.col_b[idx], 'rgb255')
             squ.draw()
 
     def drawContext(self):
-        if self.order == 0:
+        if self.context == 0: #circle up,diamond down
             circle = []
             for j in range(len(self.ups)):
                 cir = visual.Circle(WIN, radius=50, edges=40, lineWidth=3)
@@ -51,7 +60,7 @@ class Element(object):
             for idx, dim in enumerate(diam):
                 dim.setPos(self.downs[idx])
                 dim.draw()
-        elif self.order == 1:
+        elif self.context == 1:
             diam = []
             for j in range(len(self.ups)):
                 dim = visual.Rect(WIN, size=(170, 170), ori=45, lineWidth=3)
@@ -67,28 +76,36 @@ class Element(object):
                 cir.setPos(self.downs[idx])
                 cir.draw()
 
+
+
 class condition(Element):
-    def __init__(self,positionz, ups, downs, col_new, color, col_a, col_b,order,
-                 conds,CSI, probetype,display_color):
+    def __init__(self,positionz, ups, downs, col_new, color, col_a, col_b,context,
+                 conds,CSI, probetype,TestingContext):#,col_positive,col_intrusion):
         super(condition, self).__init__(positionz, ups, downs,
-                                        col_new, color, col_b, col_a, order)
+                                        col_new, color, col_b, col_a, context)
         self.conds = conds #condiotn decide CSI and probe type
         self.CSI = CSI
+        self.TestingContext = TestingContext
         self.probetype = probetype
-        self.display_color = display_color
-
     def TestingContext(self):
-        if self.order == 0:
+        if self.TestingContext == 0:
             cir = visual.Circle(WIN, radius=50, edges=40, lineWidth=3)
             cir.setPos([0, 0])
             cir.draw()
-        elif self.order == 1:
+        elif self.TestingContext == 1:
             dim = visual.Rect(WIN, size=(170, 170), ori=45, lineWidth=3)
             dim.setPos([0, 0])
             dim.draw()
         WIN.flip()
         core.wait(self.CSI)
 
+
+class Response(condition):
+    def __init__(self,positionz, ups, downs, col_new, color, col_a, col_b,context,
+                 conds,CSI, probetype,TestingContext,display_color):
+        super(Response, self).__init__(positionz, ups, downs, col_new, color, col_a, col_b,context,
+                 conds,CSI, probetype,TestingContext)
+        self.display_color = display_color
     def ProbeContent(self):
         squ = visual.Rect(WIN, size=[100, 100], lineColor=None)
         squ.setFillColor(self.display_color  ,'rgb255')
@@ -101,23 +118,20 @@ class condition(Element):
         self.RT = t2 - t1
         return self.ans, self.RT
 
-class Response(condition):
-    def __init__(self,positionz, ups, downs, col_new, color,
-                 col_a, col_b,order,
-                 conds,CSI, probetype,display_color,ans, FEEDBACK,RT):
-        super(Response, self).__init__(positionz, ups, downs,
-                                       col_new, color, col_a, col_b,order,
-                                       conds,CSI, probetype,display_color)
+class log(Response):
+    def __init__(self,positionz, ups, downs, col_new, color, col_a, col_b,context,
+                 conds,CSI, probetype,TestingContext,display_color,ans, FEEDBACK,RT):
+        super(log).__init__(positionz, ups, downs, col_new, color, col_a, col_b,context,
+                 conds,CSI, probetype,TestingContext,display_color)
         self.ans = ans
-        self. FEEDBACK = FEEDBACK
+        self.FEEDBACK = FEEDBACK
         self.RT = RT
-
     def logData(self):
         dataFile = open("%s.csv" % (expInfo['ID'] + '_' + expInfo['age'] + '_' + expInfo['block']), 'a')
         sz = len(self.positionz)
-        dataFile.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}'.format(self.order,sz,self.conds,self.CSI, self.probetype,
+        dataFile.write('{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}'.format(self.context,sz,self.conds,self.CSI, self.probetype,
                                                                              self.ans, self.FEEDBACK,self.RT,
-                                                                             self.positionz, self.ups, self.downs,self.display_color, self.col_new, self.color,
+                                                                             self.positionz, self.ups, self.downs,self.display_color, self.col_new,self.color,
                                                                              self.col_a, self.col_b)+'\n')
 def decidePos(sz):
     up = [(100, 200), (-200, 100), (-100, 200), (200, 100)]
@@ -158,21 +172,6 @@ def choseCSI(conds):
         CSI = int(5)
     return CSI
 
-def getProbeColor( probetype,cue, col_a, col_b, col_new,col_positive = None,
-                   col_intrusion = None,display_color= None):
-    if cue == 1:  # diamond circle
-        col_positive = col_b
-        col_intrusion = col_a
-    elif cue == 0:  # circlediamond
-        col_positive = col_a
-        col_intrusion = col_b
-    if probetype == 0:
-        display_color = col_positive[0]
-    elif probetype == 1:
-        display_color = col_intrusion[0]
-    elif probetype == 2:
-        display_color = col_new[0]
-    return display_color
 def decideSZ(conds):
     if conds % 4 ==0:
         sz = 4
@@ -184,13 +183,6 @@ def decideSZ(conds):
         sz =3
     return sz
 
-def decideOrder():
-    o= randint(0,1)
-    if o ==0:
-        o2= 1
-    elif o==1:
-        o2 = 0
-    return o, o2
 def studyingList(elem):
     elem.drawContent()
     elem.drawContext()
@@ -218,35 +210,81 @@ def getAns(probetype,ans):
     elif ans == ['left', 'right'] and ans == ['right', 'left']:
         FEEDBACK.append('p')
     return FEEDBACK
-
-def ProbeStage(elem,o,o2,conds):
-    for i in [o,o2]:
+def defineColor(TestingContext,context,col_a,col_b ,col_positive = None,col_intrusion =None):
+    if TestingContext == 0 and context == 0:  # asking circle
+        #            PosDiam = 1  # fill col_b
+        colDiam = col_b
+        #            PosCir = 0  # fill col_a
+        colCir = col_a
+        col_positive = colCir
+        col_intrusion = colDiam
+    elif TestingContext == 1 and context == 1:  # asking diamond
+        #            PosDiam = 1  # fill col_b
+        colDiam = col_a
+        #            PosCir = 0  # fill col_a
+        colCir = col_b
+        col_positive = colDiam
+        col_intrusion = colCir
+    elif TestingContext == 0 and context == 1:  # asking circle
+        #            PosDiam = 1  # fill col_b
+        colDiam = col_a
+        #            PosCir = 0  # fill col_a
+        colCir = col_b
+        col_positive = colCir
+        col_intrusion = colDiam
+    elif TestingContext == 1 and context == 0:  # asking diamond
+        #            PosDiam = 1  # fill col_b
+        colDiam = col_b
+        #            PosCir = 0  # fill col_a
+        colCir = col_a
+        col_positive = colDiam
+        col_intrusion = colCir
+    return col_intrusion, col_positive
+def getProbeColor(col_new,probetype,col_intrusion, col_positive,display_color = None):
+    if probetype == 0:  # positive probe
+        display_color = col_positive
+    elif probetype == 1:
+        display_color = col_intrusion
+    elif probetype == 2:
+        display_color = col_new
+    return display_color
+def decideTestingContext():
+    TestingContext = randint(0,1)
+    if TestingContext ==0:
+        TestingContext2 =1
+    else:
+        TestingContext2 =0
+    return  TestingContext,TestingContext2
+def Task(elem,conds):
+    TestingContext, TestingContext2 = decideTestingContext()
+    for i in [TestingContext,TestingContext2]:
         probetype = choseProbetype()
         CSI = choseCSI(conds)
-        display_color = getProbeColor(probetype, i, elem.col_a, elem.col_b, elem.col_new)
-        conditions = condition(elem.positionz, elem.ups, elem.downs, elem.col_new, elem.color,
-                               elem.col_a, elem.col_b, i, conds, CSI, probetype, display_color)
+        col_positive, col_intrusion = defineColor(i, elem.context, elem.col_a, elem.col_b)
+        display_color = getProbeColor(elem.col_new,probetype,col_intrusion, col_positive)
+        print  type(display_color)
+        conditions = condition(elem.positionz, elem.ups, elem.downs, elem.col_new, elem.color, elem.col_a,
+        elem.col_b, elem.context,conds, CSI, probetype, i)
         cs = conditions
-        cs.TestingContext()
-        ans, RT= cs.ProbeContent()
-        WIN.flip()
-        FEEDBACK = getAns(cs.probetype,ans)
-        WIN.flip()
-        core.wait(.8)
         res = Response(cs.positionz,cs.ups,
                        cs.downs,cs.col_new, cs.color, cs.col_a, cs.col_b,
-                       cs.order,cs.conds,cs.CSI, cs.probetype,
-                       cs.display_color, ans,FEEDBACK,RT)
+                       cs.context,cs.conds,cs.CSI, cs.probetype,
+                       cs.TestingContext,display_color)
+        res.TestingContext()
+        ans, RT= res.ProbeContent()
+        WIN.flip()
+        FEEDBACK = getAns(res.probetype,ans)
+        WIN.flip()
+        core.wait(.5)
+
         print  'Acur = {}, Ans= {}, RT={}, probetype = {},CSI = {},' \
                ' conds={},order={},display_color={},{} = color'\
-            .format(res.FEEDBACK,
+            .format(FEEDBACK,
                     res.ans,res.RT,res.probetype,res.CSI,res.conds,
-                    res.order,res.display_color,res.color)
-        res.logData()
+                    res.context,res.display_color,res.color)
+        log.logData()
         FEEDBACK.pop()
-def Task(elem,o,o2,conds):
-    studyingList(elem)
-    ProbeStage(elem,o,o2,conds)
+
 def fourtrials():
     conditions = choseCondition()
     print  conditions
@@ -255,19 +293,21 @@ def fourtrials():
         FIX.draw()
         WIN.flip()
         core.wait(.8)
-        sz = decideSZ(conds)
-        o, o2 = decideOrder()
+        sz = 1
+        context =randint(0,1)
         pos = decidePos(sz)
         cols = decideColor(sz)
-        elem = Element(pos[0], pos[1], pos[2], cols[0], cols[1], cols[2], cols[3], o)
-        Task(elem,o,o2,conds)
+        elem = Element(pos[0], pos[1], pos[2], cols[0], cols[1], cols[2], cols[3], context)
+        elem.drawContent()
+        elem.drawContext()
+        WIN.flip()
+        core.wait(5)
+        Task(elem,conds)
     print  'finish 48 trials'
-
+fourtrials()
 def for48():
-    ALERT_MSG.draw()
-    WIN.flip()
-    event.waitKeys(keyList=['space'])
+#    ALERT_MSG.draw()
+#    WIN.flip()
+#    event.waitKeys(keyList=['space'])
     for i in range(4):
         fourtrials()
-for i in range(10):
-    for48()
