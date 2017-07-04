@@ -3,9 +3,9 @@ from psychopy import core, event, gui, visual, data, info
 from itertools import chain
 FEEDBACK = []
 expInfo = {'ID': '', 'age': '', 'gender': ['Male', 'Female'], 'block': ''}
-gui.DlgFromDict(dictionary=expInfo, title='VWM Task-2', order=['ID', 'age','block'])
-COLORS = [(0, 128, 128),(139, 69, 19),(255, 255, 0),(255, 0, 0),(0, 0, 128),(255, 182, 193),(222, 184, 135),(0, 0, 255),(255, 0, 255),(128, 0, 128),(0, 100, 0)]
-WIN = visual.Window((1024, 768), monitor='testMonitor',color="grey", units="pix", fullscr=False)
+#gui.DlgFromDict(dictionary=expInfo, title='VWM Task-2', order=['ID', 'age','block'])
+COLORS = [(0, 128, 128),(139, 69, 19),(255, 255, 0),(255, 140, 0),(0, 0, 128),(255, 182, 193),(222, 184, 135),(0, 0, 255),(0, 102, 102),(128, 0, 128),(107, 142, 35)]
+WIN = visual.Window((1024, 768), monitor='testMonitor',color="grey", units="pix", fullscr=Ture)
 FEEDBACK_O = visual.TextStim(win = WIN, pos=(0, 4), height=30, text='CORRECT!', color='white')
 FEEDBACK_X = visual.TextStim(win = WIN, pos=(0, 4), height=30, text='INCORRECT!', color='white')
 phase = visual.TextStim(win = WIN, text='Practice block.\nPress the "Space" key to continue.', pos=(0, 6), height=0.8)
@@ -76,8 +76,6 @@ class Element(object):
                 cir.setPos(self.downs[idx])
                 cir.draw()
 
-
-
 class condition(Element):
     def __init__(self,positionz, ups, downs, col_new, color, col_a, col_b,context,
                  conds,CSI, probetype,TestingContext):#,col_positive,col_intrusion):
@@ -87,7 +85,7 @@ class condition(Element):
         self.CSI = CSI
         self.TestingContext = TestingContext
         self.probetype = probetype
-    def TestingContext(self):
+    def TestingContexts(self):
         if self.TestingContext == 0:
             cir = visual.Circle(WIN, radius=50, edges=40, lineWidth=3)
             cir.setPos([0, 0])
@@ -107,8 +105,8 @@ class Response(condition):
                  conds,CSI, probetype,TestingContext)
         self.display_color = display_color
     def ProbeContent(self):
-        squ = visual.Rect(WIN, size=[100, 100], lineColor=None)
-        squ.setFillColor(self.display_color  ,'rgb255')
+        squ = visual.Rect(WIN, size=[100, 100], lineColor=None, fillColorSpace ='rgb255')
+        squ.setFillColor(self.display_color)
         squ.setPos([0, 0])
         squ.draw()
         WIN.flip()
@@ -118,10 +116,10 @@ class Response(condition):
         self.RT = t2 - t1
         return self.ans, self.RT
 
-class log(Response):
+class Log(Response):
     def __init__(self,positionz, ups, downs, col_new, color, col_a, col_b,context,
                  conds,CSI, probetype,TestingContext,display_color,ans, FEEDBACK,RT):
-        super(log).__init__(positionz, ups, downs, col_new, color, col_a, col_b,context,
+        super(Log,self).__init__(positionz, ups, downs, col_new, color, col_a, col_b,context,
                  conds,CSI, probetype,TestingContext,display_color)
         self.ans = ans
         self.FEEDBACK = FEEDBACK
@@ -141,8 +139,8 @@ def decidePos(sz):
     positionz = list(chain.from_iterable([ups, downs]))
     return  positionz,ups, downs
 def decideColor(sz):
-    a = [(0, 128, 128), (139, 69, 19), (255, 255, 0), (255, 0, 0), (0, 0, 128), (255, 182, 193)]
-    b = [(222, 184, 135),(0, 0, 255), (255, 0, 255),(128, 0, 128), (0, 100, 0)]
+    a = [(0, 128, 128), (139, 69, 19), (255, 255, 0), (255, 140, 0), (0, 0, 128), (255, 182, 193)]
+    b = [(222, 184, 135),(0, 0, 255), (0, 102, 102),(128, 0, 128), (107, 142, 35)]
     h = sample(range(10), 1)[0]
     if h % 2 == 0:
         col_a = sample(a, sz)
@@ -210,44 +208,39 @@ def getAns(probetype,ans):
     elif ans == ['left', 'right'] and ans == ['right', 'left']:
         FEEDBACK.append('p')
     return FEEDBACK
-def defineColor(TestingContext,context,col_a,col_b ,col_positive = None,col_intrusion =None):
-    if TestingContext == 0 and context == 0:  # asking circle
-        #            PosDiam = 1  # fill col_b
-        colDiam = col_b
-        #            PosCir = 0  # fill col_a
-        colCir = col_a
-        col_positive = colCir
-        col_intrusion = colDiam
-    elif TestingContext == 1 and context == 1:  # asking diamond
-        #            PosDiam = 1  # fill col_b
-        colDiam = col_a
-        #            PosCir = 0  # fill col_a
-        colCir = col_b
-        col_positive = colDiam
-        col_intrusion = colCir
-    elif TestingContext == 0 and context == 1:  # asking circle
-        #            PosDiam = 1  # fill col_b
-        colDiam = col_a
-        #            PosCir = 0  # fill col_a
-        colCir = col_b
-        col_positive = colCir
-        col_intrusion = colDiam
-    elif TestingContext == 1 and context == 0:  # asking diamond
-        #            PosDiam = 1  # fill col_b
-        colDiam = col_b
-        #            PosCir = 0  # fill col_a
-        colCir = col_a
-        col_positive = colDiam
-        col_intrusion = colCir
-    return col_intrusion, col_positive
-def getProbeColor(col_new,probetype,col_intrusion, col_positive,display_color = None):
+def checkOrder(context,TestingContext,col_a,col_b):
+    col_intrusion = None
+    col_positive = None
+    if context ==0  and TestingContext ==0:
+        col_positive = col_a
+        col_intrusion = col_b
+    elif context ==1 and TestingContext ==0:
+        col_positive = col_b
+        col_intrusion = col_a
+    elif context ==1 and TestingContext ==1:
+        col_positive = col_a
+        col_intrusion = col_b
+    elif context ==0 and TestingContext ==1:
+        col_positive = col_b
+        col_intrusion = col_a
+    col_intrusion = sample(col_intrusion,1)[0]
+    col_positive = sample(col_positive,1)[0]
+    return col_positive,col_intrusion
+def getProbeColor(context,col_a,col_b , TestingContext ,col_new,probetype):
+
     if probetype == 0:  # positive probe
-        display_color = col_positive
+        #print 'probetype is positive'
+        selected_colors =checkOrder(context,TestingContext,col_a,col_b)
+        display = selected_colors[0]
     elif probetype == 1:
-        display_color = col_intrusion
+        #print 'probetype is intrusion'
+        selected_colors = checkOrder(context,TestingContext,col_a,col_b)
+        display = selected_colors[1]
     elif probetype == 2:
-        display_color = col_new
-    return display_color
+       #print 'probetype is new'
+        display = sample(col_new,1)[0]
+    display_color  = display
+    return  display_color
 def decideTestingContext():
     TestingContext = randint(0,1)
     if TestingContext ==0:
@@ -260,17 +253,15 @@ def Task(elem,conds):
     for i in [TestingContext,TestingContext2]:
         probetype = choseProbetype()
         CSI = choseCSI(conds)
-        col_positive, col_intrusion = defineColor(i, elem.context, elem.col_a, elem.col_b)
-        display_color = getProbeColor(elem.col_new,probetype,col_intrusion, col_positive)
-        print  type(display_color)
         conditions = condition(elem.positionz, elem.ups, elem.downs, elem.col_new, elem.color, elem.col_a,
         elem.col_b, elem.context,conds, CSI, probetype, i)
         cs = conditions
+        display_color = getProbeColor(cs.context,cs.col_a,cs.col_b , i ,cs.col_new,cs.probetype)
         res = Response(cs.positionz,cs.ups,
                        cs.downs,cs.col_new, cs.color, cs.col_a, cs.col_b,
                        cs.context,cs.conds,cs.CSI, cs.probetype,
                        cs.TestingContext,display_color)
-        res.TestingContext()
+        res.TestingContexts()
         ans, RT= res.ProbeContent()
         WIN.flip()
         FEEDBACK = getAns(res.probetype,ans)
@@ -278,11 +269,13 @@ def Task(elem,conds):
         core.wait(.5)
 
         print  'Acur = {}, Ans= {}, RT={}, probetype = {},CSI = {},' \
-               ' conds={},order={},display_color={},{} = color'\
+               ' display_color={},order={},conds={},{} = color'\
             .format(FEEDBACK,
-                    res.ans,res.RT,res.probetype,res.CSI,res.conds,
+                    res.ans,res.RT,res.probetype,res.CSI,res.display_color,res.conds,
                     res.context,res.display_color,res.color)
-        log.logData()
+        logs = Log(res.positionz, res.ups, res.downs, res.col_new, res.color, res.col_a, res.col_b,res.context,
+                 res.conds,res.CSI, res.probetype,res.TestingContext,res.display_color,ans, FEEDBACK,RT)
+        Log.logData(logs)
         FEEDBACK.pop()
 
 def fourtrials():
@@ -306,15 +299,11 @@ def fourtrials():
     print  'finish 48 trials'
 fourtrials()
 def for48():
-#    ALERT_MSG.draw()
-#    WIN.flip()
-#    event.waitKeys(keyList=['space'])
+    ALERT_MSG.draw()
+    WIN.flip()
+    event.waitKeys(keyList=['space'])
     for i in range(4):
         fourtrials()
 #for48()
 # for i in range(10):
 #     for48()
-#0	4	38	0.3	2	['right']	[1]	2.837929353	[(-100	 200)	 (100	 200)	 (200	 -100)	 (-200	 -100)]	[(-100	 200)	 (100	 200)]	[(200	 -100)	 (-200	 -100)]	(255	255	 0)	[(255	255	 0)	 (222	184	 135)	 (0	0	 255)	 (255	0	 0)	 (0	100	 0)	 (0	128	 128)	 (255	182	 193)]	[(0	0	 128)	 (139	69	 19)	 (255	0	 255)	 (128	0	 128)]	[(0	0	 128)	 (139	69	 19)]	[(255	0	 255)	 (128	0	 128)]
-#self.order,sz,self.conds,self.CSI, self.probetype,self.ans, self.FEEDBACK,self.RT,self.positionz, self.ups, self.downs,self.display_color, self.col_new, self.color,self.col_a, self.col_b)+
-# order = 1
-# sz =
