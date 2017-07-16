@@ -9,14 +9,14 @@ WIN = visual.Window((1024, 768), monitor='testMonitor',color="grey", units="pix"
 FEEDBACK_O = visual.TextStim(win = WIN, pos=(0, 4), height=30, text='CORRECT!', color='white')
 FEEDBACK_X = visual.TextStim(win = WIN, pos=(0, 4), height=30, text='INCORRECT!', color='white')
 phase = visual.TextStim(win = WIN, text='Ready to go?\nPress the "Space" key to continue.', pos=(0, 6), height=0.8)
-instr = visual.TextStim(win = WIN,text='Remember position and color,\nif color belong same frame, press "Left",otherwise color belong diifent frame, press"Right".\n Press "space" to continue.', pos=(0, 4), height=0.8)
+instr = visual.TextStim(win = WIN,text='Remember position and color,\nif color belong same frame, press "Left",otherwise color belong diifent frame, press"Right".\n Press "space" to continue.', pos=(0, 4), height= 40)
 practice = visual.TextStim(win = WIN,text='This is the practice block.\n''Make judgment if color appear belong same frame.Press "Left",/n color appears in different frame, please press "Right".''Now press the "Space" key to start practice block.', pos=(0, -2), height=0.8)
 FIX = visual.TextStim(win = WIN, text='+', height=120, color='white', pos=(0, 0))
 ALERT_MSG = visual.TextStim(win = WIN, pos=(0, 4), height=40,
                             text='Get Ready for VWM task. Remember color and shape of frame, \nPress "Space" to start.',
                             color='white')
 BLOCK_MSG = visual.TextStim(win = WIN, pos=(0, 4), height=40,
-                            text='Finish 40 trials, take  a rest, if you are ready, \nPress "Space" to start.',
+                            text='Finish 40 trials, take a rest, if you are ready, \nPress "Space" to start.',
                             color='white')
 class Element(object): #initailize the color and position we need in the experiment trials
     def __init__(self, positionz, ups, downs, col_new, color, col_b, col_a, context):
@@ -380,5 +380,40 @@ def practice(CSI):
         elem = Element(pos[0], pos[1], pos[2], cols[0], cols[1], cols[2], cols[3], context)
         studyingList(elem)
         probe(elem,conds,CSI)
+
+def block(CSI):
+    def trials40(CSI):
+        conditions = choseCondition()
+        for conds in conditions:
+            FIX = visual.TextStim(win=WIN, pos=(0, 0), height=80, text='+', color='white')
+            FIX.draw()
+            WIN.flip()
+            core.wait(.8)
+            sz = decideSZ(conds)
+            context = randint(0, 1)  # decide location of shape of frame
+            pos = decidePos(sz)
+            cols = decideColor(sz)
+            elem = Element(pos[0], pos[1], pos[2], cols[0], cols[1], cols[2], cols[3], context)
+            # make instance for element class
+            studyingList(elem)
+            probe(elem, conds, CSI)
+        print  'finish 40 trials'
+    BLOCK_MSG.draw()
+    WIN.flip()
+    event.waitKeys(keyList=['space'])
+    trials40(CSI)
+    BLOCK_MSG.draw()
+    WIN.flip()
+    event.waitKeys(keyList=['space'])
+    phase.draw()
+    WIN.flip()
+    event.waitKeys(keyList=['space'])
+    trials40(CSI)
+    BLOCK_MSG.draw()
+    WIN.flip()
+    event.waitKeys(keyList=['space'])
+    phase.draw()
+    WIN.flip()
+    event.waitKeys(keyList=['space'])
 practice(2)
 balance()
