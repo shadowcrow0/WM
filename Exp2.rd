@@ -1,7 +1,7 @@
     setwd(“D:/Dropbox/working memory/output/exp2”)
     getwd()
 
-    #讀csv 檔，我把論文資料都放在 dropbox 上，最近他跟我說時間到了空間會消失有點苦惱
+    #讀csv 檔
 
     csvpath = “D:/Dropbox/working memory/output/exp2/”
     csvfilesn = list.files( path = csvpath, pattern=”*.csv”)
@@ -102,3 +102,5 @@
     #把 sz.probetype 裡面的[4]跟[3]相除，然後看 Bayes Factor 支持誰發生機率比較大
 
     # [1] Setsize + probetype + Setsize:probetype + pID :0.02829201 ±3.42%
+
+#結果就是 Bayes Factor 覺得加上交互作用比較有可能會發生，但是他的 BF = 0.02829201，基本上就發生機會很小，所以我們偏向支持有交互作用的證據非常微弱甚至不值得一提。
