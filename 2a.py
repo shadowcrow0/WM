@@ -4,9 +4,10 @@ from itertools import chain
 FEEDBACK = []
 expInfo = {'ID': '', 'age': '', 'gender': ['Male', 'Female'], 'block': [1,2,3,4,5,6,'p',0]}
 gui.DlgFromDict(dictionary=expInfo, title='VWM Task-2A', order=['ID', 'age','gender','block'])
-COLORS =[(255, 0, 255),(139, 69, 19),(255, 140, 0),(0, 0, 128),(0,100,0.),
-          (222, 184, 135),(0, 0, 255),(0, 255, 0),(128, 0, 128),
-          (107, 142, 35),(255,0,0)]
+COLORS = [(0, 128, 128),(139, 69, 19),(255, 255, 0),(255, 140, 0),
+          (0, 0, 128),(255, 182, 193),(222, 184, 135),(0, 0, 255),
+          (0, 102, 102),(128, 0, 128),(107, 142, 35)]
+
 WIN = visual.Window((1024, 768), monitor='testMonitor',color="grey", units="pix", fullscr=True)
 FEEDBACK_O = visual.TextStim(win = WIN, pos=(0, 4), height=60, text='CORRECT!', color='white')
 FEEDBACK_X = visual.TextStim(win = WIN, pos=(0, 4), height=60, text='INCORRECT!', color='white')
@@ -176,9 +177,11 @@ def decidePos(sz):
     return  positionz,ups, downs
 
 def decideColor(sz):
-    a = [(255, 0, 255),(139, 69, 19),(255, 140, 0),(0, 0, 128),(0,100,0.),
-          (222, 184, 135)]
-    b = [(0, 0, 255),(0, 255, 0),(128, 0, 128),(107, 142, 35),(255,0,0)]
+    a = [(0, 128, 128), (139, 69, 19), (255, 255, 0), (255, 140, 0),
+         (0, 0, 128)]
+    b = [(255, 182, 193), (222, 184, 135), (0, 0, 255),
+              (0, 102, 102), (128, 0, 128), (107, 142, 35)]
+
     h = sample(range(10), 1)[0]
     if h % 2 == 0:
         col_a = sample(a, sz)
